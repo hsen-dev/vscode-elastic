@@ -26,6 +26,12 @@ The extension provides several commands in the Command Palette for working with 
 - **Elastic: Run Query** script, for Elasticsearch in the editor.
 - **Elastic: Set Host** to create connection profile and connect.
 
+## Roadmap
+
+- Work with multi host
+- User Authentication
+- IntelliSense like kibana autocomplete
+
 ## Change Log
 
 ### [0.5]
