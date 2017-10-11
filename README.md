@@ -2,7 +2,7 @@
 
 Welcome to Elasticsearch for Visual Studio Code! An extension for developing Elasticsearch queries like Kibana and Sense extention.
 
-![shot](shots/scr2.png)
+![shot](shots/scr2.PNG)
 
 ## Using
 
