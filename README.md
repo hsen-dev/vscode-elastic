@@ -4,6 +4,12 @@ Welcome to Elasticsearch for Visual Studio Code! An extension for developing Ela
 
 ![shot](shots/scr2.PNG)
 
+https://marketplace.visualstudio.com/items?itemName=ria.elastic
+
+```
+ext install elastic
+```
+
 ## Using
 
 - First, install Visual Studio Code then install **Elastic** extension by pressing `F1` or `ctrl+shift+p` to open command palette, select Install Extension and type `elastic`.
