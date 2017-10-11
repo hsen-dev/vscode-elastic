@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<meta charset='utf-8'>
+
+<head>
+{{{header}}}
+    <style>
+        .json-formatter-dark.json-formatter-row,
+        .code {
+            font-family:{{{fontFamily}}};
+            font-size: {{{fontSize}}}px;
+        }
+
+        body {
+            font-family:{{{fontFamily}}};
+            font-size: {{{fontSize}}}px;
+        }
+    </style>
+</head>
+
+<body>
+    <a id="commander"></a>
+
+    <div class="info {{err}}">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Host</th>
+                    <td>{{host}}</td>
+                </tr>
+                <!-- <tr><th>Time Taken</th><td>{{time}}ms</td></tr> -->
+                <tr>
+                    <td class='msg {{err}}'>{{statusText}}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    </div>
+
+    <div class="code">
+        {{plain}}
+    </div>
+
+
+    <div style="display:none">
+        <menu id="html5menu" style="display:none" class="showcase">
+            <command label="copy JSON path" onclick="copy_path(1)"></command>
+            <command label="copy JSON content" onclick="copy_content()"></command>
+        </menu>
+    </div>
+
+    <script>
+        const myJSON = {{{json}}};
+        const formatter = new JSONFormatter(myJSON, 4, { theme: 'dark' });
+        document.getElementsByClassName("code")[0].appendChild(formatter.render());
+    </script>
+    <script>
+        $(function () {
+            $.contextMenu({
+                selector: '.json-formatter-row',
+                items: $.contextMenu.fromMenu($('#html5menu'))
+            });
+        });
+    </script>
+
+    <script>
+        $(function () {
+            $.contextMenu({
+                selector: '.json-formatter-row',
+                items: $.contextMenu.fromMenu($('#html5menu'))
+            });
+        });
+
+        function copy_path(clip) {
+            var r = $(".context-menu-active");
+            var i = 20;
+            var last = '';
+            var path = '';
+            while (r && i > 0) {
+                var a = r.closest(".json-formatter-row");
+                var t = a.children("a").children(".json-formatter-key");
+                if (t[0] == undefined)
+                    break;
+                var str = t[0].textContent;
+                var t2 = a.children("div")
+                    .attr("class")
+                    .replace("json-formatter-children", "")
+                    .replace("json-formatter-object", "")
+                    .trim();
+
+                if (last.length > 0) {
+                    if (t2 === 'json-formatter-array') {
+                        path = '[' + last + ']' + path;
+                    } else {
+                        path = '["' + last + '"]' + path;
+                    }
+                }
+                r = a.parent();
+                last = str.substring(0, str.length - 1);
+                i -= 1;
+            }
+            path = '["' + last + '"]' + path;
+            if (clip == 1) {
+                var command = encodeURI('command:extension.setClip?' + JSON.stringify(['${uri}', path]));
+                $("#commander").attr("href", command);
+                $("#commander")[0].click();
+            }
+            return path;
+        }
+
+        function copy_content() {
+
+            var q = copy_path(0);
+            q = 'var result = myJSON' + q;
+            eval(q);
+
+            var command = encodeURI('command:extension.setClip?' + JSON.stringify(['${uri}', result]));
+            $("#commander").attr("href", command);
+            $("#commander")[0].click();
+        }
+    </script>
+
+
+</body>
+
+</html>
