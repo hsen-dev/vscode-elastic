@@ -68,7 +68,7 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
         });
 
         let errHighlight = vscode.window.createTextEditorDecorationType({
-            border: '1px solid red'
+            border: '1px dashed red'
         });
 
         editor.setDecorations(highlight, []);
