@@ -5,7 +5,7 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
     context: vscode.ExtensionContext;
 
     public constructor(context: vscode.ExtensionContext) {
-        this.context =context
+        this.context = context
     }
 
     public provideCodeLenses(document: vscode.TextDocument, _token: vscode.CancellationToken) {
@@ -19,7 +19,7 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
         var errRange: vscode.Range[] = []
 
 
-        var eMatches: ElasticMatch[] = []       
+        var eMatches: ElasticMatch[] = []
 
 
         //const requestReg = /^(GET|POST|DELETE|PUT|OPTIONS|PATCH|HEAD)\s+/gim;
@@ -31,27 +31,27 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
 
         //editor.setDecorations(highlight, [range]);
         let highlight = vscode.window.createTextEditorDecorationType({
-            color: 'rgb(0,200,100)',   
+            color: 'rgb(0,200,100)',
             light: {
-                after: { contentText: ' • ' + host, color: 'lightgray'}
+                after: { contentText: ' • ' + host, color: 'lightgray' }
             },
             dark: {
-                after: { contentText: ' • ' + host, color: 'gray'}
-            } 
+                after: { contentText: ' • ' + host, color: 'gray' }
+            }
         });
 
         // let bb = vscode.window.createTextEditorDecorationType({
-            
+
         //     gutterIconPath: this.context.asAbsolutePath("./image/glu.svg"),
-            
+
         //     isWholeLine: true,
         //     overviewRulerLane: vscode.OverviewRulerLane.Full,
         // })
 
         let bHighlight = vscode.window.createTextEditorDecorationType({
-            isWholeLine:true,       
+            isWholeLine: true,
             gutterIconPath: vscode.Uri.parse('data:image/svg+xml;base64,PHN2ZyB4b+'),
-            gutterIconSize: 'contain',    
+            gutterIconSize: 'contain',
 
             light: {
                 backgroundColor: 'rgba(180,180,200,0.1)'
@@ -113,7 +113,7 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
 
 
         // "⚡ ↯ ▷↓↑ Lint"
-        
+
         var ret = [];
 
         eMatches.forEach(em => {
