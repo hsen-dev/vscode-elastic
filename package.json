@@ -1,8 +1,8 @@
 {
 	"name": "elastic",
-	"displayName": "Elastic",
+	"displayName": "Elastic",	
 	"description": "Elasticsearch client like Kibana console for vscode",
-	"version": "0.5",
+	"version": "0.5.0",
 	"publisher": "ria",
 	"icon": "media/elastic.png",
 	"engines": {
@@ -24,6 +24,13 @@
 		"Elastic client",
 		"es"
 	],
+	"bugs": {
+        "url": "https://github.com/hsen-dev/vscode-elastic/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/hsen-dev/vscode-elastic.git"
+    },
 	"activationEvents": [
 		"onLanguage:es",
 		"onCommand:elastic.execute",
@@ -32,11 +39,6 @@
 	"main": "./out/src/extension",
 	"contributes": {
 		"commands": [
-			// {
-			// 	"command": "elastic.execute",
-			// 	"title": "Elastic: Run Query",
-			// 	"category": "ES"
-			// },
 			{
 				"command": "elastic.setHost",
 				"title": "Elastic: Set Host",
