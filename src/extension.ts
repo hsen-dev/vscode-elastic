@@ -9,7 +9,7 @@ import path = require('path');
 
 import { ElasticCodeLensProvider } from './ElasticCodeLensProvider'
 import { ElasticContentProvider } from './ElasticContentProvider'
-import { UpdateDecoration } from './ElasticDecoration'
+import { ElasticDecoration } from './ElasticDecoration'
 import { ElasticMatch } from './ElasticMatch'
 
 // import { JSONCompletionItemProvider } from "./JSONCompletionItemProvider";
@@ -58,9 +58,13 @@ export function activate(context: vscode.ExtensionContext) {
         executeQuery(context, resultsProvider, em);
     }));
 
+
+    let decoration = new ElasticDecoration(context)
+
     vscode.workspace.onDidChangeTextDocument((e) => {
-        if (e.document === vscode.window.activeTextEditor.document) {
-            UpdateDecoration(vscode.window.activeTextEditor)
+        var editor = vscode.window.activeTextEditor
+        if (e.document === editor.document) {
+            decoration.UpdateDecoration(editor)
         }
     });
 

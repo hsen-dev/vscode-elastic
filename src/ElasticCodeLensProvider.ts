@@ -1,18 +1,20 @@
 import * as vscode from 'vscode';
 import { ElasticMatch } from './ElasticMatch'
-import { UpdateDecoration } from './ElasticDecoration'
+import { ElasticDecoration } from './ElasticDecoration'
 
 export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
+    decoration: ElasticDecoration;
     context: vscode.ExtensionContext;
 
     public constructor(context: vscode.ExtensionContext) {
         this.context = context
+        this.decoration = new ElasticDecoration(context)
     }
 
     public provideCodeLenses(document: vscode.TextDocument, _token: vscode.CancellationToken) {
 
         const editor = vscode.window.activeTextEditor;
-        var eMatches = UpdateDecoration(editor)
+        var eMatches = this.decoration.UpdateDecoration(editor)
 
         // "⚡ ↯ ▷↓↑ Lint"
 
