@@ -110,7 +110,7 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
                 arguments: [em]
             }))
 
-            if (em.HasBody && em.Error == null) {
+            if (em.HasBody && em.Error.Range == null) {
                 ret.push(new vscode.CodeLens(em.Method.Range, {
                     title: "⚡ Auto indent",
                     command: "elastic.lint",
@@ -118,7 +118,7 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
                 }))
             }
             else {
-                if (em.Error != null) {
+                if (em.Error.Range != null) {
                     ret.push(new vscode.CodeLens(em.Method.Range, {
                         title: "⚠️ Invalid Json",
                         command: ""
