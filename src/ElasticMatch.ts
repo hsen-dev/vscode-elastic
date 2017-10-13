@@ -28,16 +28,18 @@ export class ElasticMatch {
         let line = this.Method.Range.start.line + 1
         let ln = line
 
-        while (editor.document.lineCount > ln && editor.document.lineAt(ln).text.trim().length > 0) {
+        while (editor.document.lineCount > ln && editor.document.lineAt(ln).text.trim().length > 0) {            
             txt += editor.document.lineAt(ln).text + "\n"
-            lm = editor.document.lineAt(ln).text.length
+            lm = editor.document.lineAt(ln).text.length            
             ln++;
         }
+        
+        txt = txt.substring(0, txt.length - 1)
 
         let sp = new vscode.Position(line, 0)
-        let ep = new vscode.Position(ln, lm - 1)
+        let ep = new vscode.Position(ln - 1, lm)
         this.Body.Range = new vscode.Range(sp, ep)
-   
+
 
         try {
             JSON.parse(txt)
@@ -45,9 +47,9 @@ export class ElasticMatch {
             this.Body.Text = txt
         } catch (error) {
             console.error(error.message)
-            this.HasBody = false            
+            this.HasBody = false
             this.Error.Text = error.message
-            this.Error.Range =  this.GetErrorRangeFromMessage(txt, error.message)
+            this.Error.Range = this.GetErrorRangeFromMessage(txt, error.message)
         }
     }
 
