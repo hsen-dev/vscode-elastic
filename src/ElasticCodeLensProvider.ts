@@ -13,9 +13,6 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
         const editor = vscode.window.activeTextEditor;
         var host = this.context.workspaceState.get("elastic.host", "localhost:9200")
 
-
-      
-        var errRange: vscode.Range[] = []
         var eMatches: ElasticMatch[] = []
 
 
@@ -96,10 +93,10 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
             }
         }
 
-        editor.setDecorations(mHighlight, eMatches.map(m => m.Method.Range));
-        editor.setDecorations(highlight, eMatches.map(p => p.Path.Range));
-        editor.setDecorations(bHighlight, eMatches.map(b => b.Body.Range));
-
+        editor.setDecorations(mHighlight, eMatches.map(m => m.Method.Range).filter(x=>!!x));
+        editor.setDecorations(highlight, eMatches.map(p => p.Path.Range).filter(x=>!!x));
+        editor.setDecorations(bHighlight, eMatches.map(b => b.Body.Range).filter(x=>!!x));
+        editor.setDecorations(errHighlight, eMatches.map(e => e.Error.Range).filter(x=>!!x));
 
         // "⚡ ↯ ▷↓↑ Lint"
 
@@ -113,7 +110,7 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
                 arguments: [em]
             }))
 
-            if (em.HasBody && em.ErrorPosition == null) {
+            if (em.HasBody && em.Error == null) {
                 ret.push(new vscode.CodeLens(em.Method.Range, {
                     title: "⚡ Auto indent",
                     command: "elastic.lint",
@@ -121,8 +118,7 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
                 }))
             }
             else {
-                if (em.ErrorPosition != null) {
-                    errRange.push(new vscode.Range(em.ErrorPosition, new vscode.Position(em.ErrorPosition.line, em.ErrorPosition.character + 1)))
+                if (em.Error != null) {
                     ret.push(new vscode.CodeLens(em.Method.Range, {
                         title: "⚠️ Invalid Json",
                         command: ""
@@ -132,7 +128,7 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
 
         });
 
-        editor.setDecorations(errHighlight, errRange);
+        
         // editor.setDecorations(bHighlight, eMatches.map(b => {return b.Body.Range}));
 
 

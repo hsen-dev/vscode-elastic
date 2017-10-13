@@ -9,15 +9,17 @@ export class ElasticItem {
 }
 
 export class ElasticMatch {
-    Message: String
+
+    Error: ElasticItem
     Path: ElasticItem
     Body: ElasticItem
     Method: ElasticItem
     HasBody: boolean = false
-    ErrorPosition: vscode.Position
 
     public constructor(Method: ElasticItem) {
         this.Method = Method;
+        this.Body = new ElasticItem()
+        this.Error = new ElasticItem()
 
         const editor = vscode.window.activeTextEditor;
 
@@ -34,7 +36,6 @@ export class ElasticMatch {
 
         let sp = new vscode.Position(line, 0)
         let ep = new vscode.Position(ln, lm - 1)
-        this.Body = new ElasticItem()
         this.Body.Range = new vscode.Range(sp, ep)
    
 
@@ -44,13 +45,13 @@ export class ElasticMatch {
             this.Body.Text = txt
         } catch (error) {
             console.error(error.message)
-            this.HasBody = false
-            this.Message = error.message
-            this.ErrorPosition = this.GetErrorPositionFromMessage(txt, error.message)
+            this.HasBody = false            
+            this.Error.Text = error.message
+            this.Error.Range =  this.GetErrorRangeFromMessage(txt, error.message)
         }
     }
 
-    GetErrorPositionFromMessage(text: string, message: string): vscode.Position {
+    GetErrorRangeFromMessage(text: string, message: string): vscode.Range {
         var regexp = /Position\s(\d+)/gim;
         var match = regexp.exec(message);
         if (match) {
@@ -58,7 +59,8 @@ export class ElasticMatch {
             text = text.substring(0, pos)
             var lines: string[] = text.split("\n")
             var char = lines[lines.length - 1].length
-            return new vscode.Position(lines.length + this.Method.Range.start.line, char)
+            var line = lines.length + this.Method.Range.start.line;
+            return new vscode.Range(line, char, line, char + 1)
         }
 
         return null;
