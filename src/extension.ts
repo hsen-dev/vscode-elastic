@@ -7,8 +7,9 @@ import url = require('url');
 import path = require('path');
 
 
-import { ElasticCodeLensProvider } from './ElasticCodeLensProvider';
+import { ElasticCodeLensProvider } from './ElasticCodeLensProvider'
 import { ElasticContentProvider } from './ElasticContentProvider'
+import { UpdateDecoration } from './ElasticDecoration'
 import { ElasticMatch } from './ElasticMatch'
 
 // import { JSONCompletionItemProvider } from "./JSONCompletionItemProvider";
@@ -57,11 +58,11 @@ export function activate(context: vscode.ExtensionContext) {
         executeQuery(context, resultsProvider, em);
     }));
 
-    // vscode.workspace.onDidChangeTextDocument((e) => {
-    //     if (e.document === vscode.window.activeTextEditor.document) {
-    //         //parseQuery(resultsProvider, context);
-    //     }
-    // });
+    vscode.workspace.onDidChangeTextDocument((e) => {
+        if (e.document === vscode.window.activeTextEditor.document) {
+            UpdateDecoration(vscode.window.activeTextEditor)
+        }
+    });
 
     vscode.workspace.onDidChangeConfiguration((e) => {
         //vscode.window.showInformationMessage('Ready!');
@@ -70,17 +71,12 @@ export function activate(context: vscode.ExtensionContext) {
     // vscode.window.onDidChangeTextEditorSelection((e) => {
     //     if (e.textEditor === vscode.window.activeTextEditor) {
     //         // resultsProvider.update(previewUri);
-    //         parseQuery(resultsProvider, context);
     //     }
     // });
 
     context.subscriptions.push(vscode.commands.registerCommand('elastic.setHost', () => {
         setHost(context);
     }));
-
-    // vscode.commands.registerCommand('extension.catQuery', (uri, query) => {
-    //     executeQuery(context, resultsProvider, { method: "GET", path: query, body: null });
-    // });
 
     vscode.commands.registerCommand('extension.setClip', (uri, query) => {
         var ncp = require("copy-paste");
@@ -99,7 +95,7 @@ export function activate(context: vscode.ExtensionContext) {
             editor.edit(editBuilder => {
                 if (em.HasBody) {
                     let txt = editor.document.getText(em.Body.Range)
-                    editBuilder.replace(em.Body.Range, JSON.stringify(JSON.parse(em.Body.Text), null, 2) + "\n")
+                    editBuilder.replace(em.Body.Range, JSON.stringify(JSON.parse(em.Body.Text), null, 2))
                 }
             });
         } catch (error) {
@@ -125,36 +121,6 @@ async function setHost(context: vscode.ExtensionContext): Promise<string> {
     context.workspaceState.update("elastic.host", host);
     return new Promise<string>((resolve) => resolve(host));
 }
-
-function parseSearchQuery(code) {
-    const requestReg = /^(GET|POST|DELETE|PUT|OPTIONS|PATCH|HEAD)\s?(\S+)?\s?(HTTP\/\d\.\d+)?$/gim;
-    const headerReg = /^([A-Za-z\-]+):(.+)$/gm;
-    if (!code.trim()) {
-        return null;
-    }
-    let matches = requestReg.exec(code);
-    if (matches && matches.length > 1) {
-        const method = matches[1].toUpperCase();
-        const path = matches[2] || '';
-        const headers = {};
-        while ((matches = headerReg.exec(code)) !== null) {
-            headers[matches[1]] = matches[2];
-        }
-        const jsonBodyStart = code.indexOf('{');
-        let body;
-        if (jsonBodyStart > -1) {
-            try {
-                body = JSON.parse(code.substring(jsonBodyStart));
-            }
-            catch (e) {
-                body = null;
-            }
-        }
-        return { method, path, body };
-    }
-    return null;
-}
-
 
 export async function executeQuery(context: vscode.ExtensionContext, resultsProvider: ElasticContentProvider, em: ElasticMatch) {
     const host: string = context.workspaceState.get("elastic.host", null) || await setHost(context);
