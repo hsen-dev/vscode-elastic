@@ -37,17 +37,12 @@ export function activate(context: vscode.ExtensionContext) {
     //         vscode.window.showInformationMessage('Ready!');
     //         context.subscriptions.push(vscode.languages.registerCompletionItemProvider(languages, provider));
     //     }
-
     // });
-
-
-
-
-    // console.log('Congratulations, your extension "file-info" is now active!');
 
     let resultsProvider = new ElasticContentProvider();
     const registration = vscode.workspace.registerTextDocumentContentProvider("elastic", resultsProvider);
     const previewUri = "elastic://results";
+
     // vscode.languages.registerCompletionItemProvider('es', {
     //     provideCompletionItems(document, position, token) {
     //         // return [new vscode.CompletionItem('Hello World')];
@@ -55,6 +50,9 @@ export function activate(context: vscode.ExtensionContext) {
     //         return null;
     //     }
     // });
+
+    
+
     context.subscriptions.push(vscode.commands.registerCommand('elastic.execute', (em: ElasticMatch) => {
         executeQuery(context, resultsProvider, em);
     }));
@@ -94,15 +92,19 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(vscode.commands.registerCommand('elastic.lint', (em: ElasticMatch) => {
 
-        let l = em.Method.Range.start.line + 1
-        const editor = vscode.window.activeTextEditor
+        try {
+            let l = em.Method.Range.start.line + 1
+            const editor = vscode.window.activeTextEditor
 
-        editor.edit(editBuilder => {
-            if (em.HasBody) {
-                let txt = editor.document.getText(em.Body.Range)
-                editBuilder.replace(em.Body.Range, JSON.stringify(JSON.parse(em.Body.Text), null, 2) + "\n")
-            }
-        });
+            editor.edit(editBuilder => {
+                if (em.HasBody) {
+                    let txt = editor.document.getText(em.Body.Range)
+                    editBuilder.replace(em.Body.Range, JSON.stringify(JSON.parse(em.Body.Text), null, 2) + "\n")
+                }
+            });
+        } catch (error) {
+            console.log(error.message)
+        }
     }));
 
 }
