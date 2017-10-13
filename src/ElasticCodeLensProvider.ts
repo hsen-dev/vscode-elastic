@@ -14,11 +14,8 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
         var host = this.context.workspaceState.get("elastic.host", "localhost:9200")
 
 
-        var lRange: vscode.Range[] = []
-        var mRange: vscode.Range[] = []
+      
         var errRange: vscode.Range[] = []
-
-
         var eMatches: ElasticMatch[] = []
 
 
@@ -40,17 +37,9 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
             }
         });
 
-        // let bb = vscode.window.createTextEditorDecorationType({
-
-        //     gutterIconPath: this.context.asAbsolutePath("./image/glu.svg"),
-
-        //     isWholeLine: true,
-        //     overviewRulerLane: vscode.OverviewRulerLane.Full,
-        // })
-
         let bHighlight = vscode.window.createTextEditorDecorationType({
             isWholeLine: true,
-            gutterIconPath: vscode.Uri.parse('data:image/svg+xml;base64,PHN2ZyB4b+'),
+            gutterIconPath: this.context.asAbsolutePath("./media/gutter.svg"),//vscode.Uri.parse('data:image/svg+xml;base64,PHN2ZyB4b+'),
             gutterIconSize: 'contain',
 
             light: {
@@ -74,7 +63,7 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
         editor.setDecorations(highlight, []);
         editor.setDecorations(mHighlight, []);
         editor.setDecorations(errHighlight, []);
-        //editor.setDecorations(bHighlight, []);
+        editor.setDecorations(bHighlight, []);
 
         var vir = false
 
@@ -104,13 +93,12 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
                 vir = true
 
                 eMatches.push(em)
-                lRange.push(lrange);
-                mRange.push(mrange);
             }
         }
 
-        editor.setDecorations(mHighlight, mRange);
-        editor.setDecorations(highlight, lRange);
+        editor.setDecorations(mHighlight, eMatches.map(m => m.Method.Range));
+        editor.setDecorations(highlight, eMatches.map(p => p.Path.Range));
+        editor.setDecorations(bHighlight, eMatches.map(b => b.Body.Range));
 
 
         // "⚡ ↯ ▷↓↑ Lint"
