@@ -53,7 +53,7 @@
 
     <script>
         const myJSON = {{{json}}};
-        const formatter = new JSONFormatter(myJSON, 4, { theme: 'dark' });
+        const formatter = new JSONFormatter(myJSON, Infinity, { theme: 'dark' });
         document.getElementsByClassName("code")[0].appendChild(formatter.render());
     </script>
     <script>
