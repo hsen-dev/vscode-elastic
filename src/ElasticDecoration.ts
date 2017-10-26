@@ -89,7 +89,7 @@ export class ElasticDecoration {
             vir = false
 
             // https://stackoverflow.com/a/1547940/1495442
-            var regexp = /^(GET|POST|DELETE|PUT|OPTIONS|PATCH|HEAD)\s+([A-Za-z0-9\-._~:\/#\[\]@!$&'\(\)\*+,;=`]+$)/gim;
+            var regexp = /^(GET|POST|DELETE|PUT|OPTIONS|PATCH|HEAD)\s+([A-Za-z0-9\-._~:\/#\[\]@!$&'\(\)\*+,;=`?]+$)/gim;
             var match = regexp.exec(line.text);
 
             if (match != null) {
