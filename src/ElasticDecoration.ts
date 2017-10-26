@@ -38,8 +38,8 @@ export class ElasticDecoration {
 
         this.mHighlight = vscode.window.createTextEditorDecorationType({
             color: 'rgb(255,100,100)',
-            overviewRulerColor: 'blue',
-            overviewRulerLane: vscode.OverviewRulerLane.Full
+            overviewRulerColor: '#0271bc',
+            overviewRulerLane: vscode.OverviewRulerLane.Left
         });
 
         this.errHighlight = vscode.window.createTextEditorDecorationType({
@@ -54,7 +54,9 @@ export class ElasticDecoration {
             {
                 borderColor: 'rgba(255,0,0,0.5)',
                 backgroundColor: 'rgba(255,0,0,0.25)'
-            }
+            },            
+            overviewRulerColor: 'rgba(255,0,0,0.5)',
+            overviewRulerLane: vscode.OverviewRulerLane.Left
         });
     }
 
