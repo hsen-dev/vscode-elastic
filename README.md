@@ -1,4 +1,4 @@
-## Elastic for Visual Studio Code
+## Elasticsearch for VSCode
 
 Welcome to Elasticsearch for Visual Studio Code! An extension for developing Elasticsearch queries like Kibana and Sense extention.
 

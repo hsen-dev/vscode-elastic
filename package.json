@@ -1,6 +1,6 @@
 {
 	"name": "elastic",
-	"displayName": "Elastic",	
+	"displayName": "elasticsearch for vscode",	
 	"description": "Elasticsearch client like Kibana console for vscode",
 	"version": "0.5.3",
 	"publisher": "ria",
