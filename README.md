@@ -2,22 +2,14 @@
 
 Welcome to Elasticsearch for Visual Studio Code! An extension for developing Elasticsearch queries like Kibana and Sense extention.
 
-![shot](shots/scr-6.0.png)
+![shot](shots/scr-0.6.5.png)
 
 https://marketplace.visualstudio.com/items?itemName=ria.elastic
 
-```
-ext install elastic
-```
-
 ## Using
 
-- First, install Visual Studio Code then install **Elastic** extension by pressing `F1` or `ctrl+shift+p` to open command palette, select Install Extension and type `elastic`.
 - Open an existing file with a `.es` file extenion or open a new text file (`ctrl+n`) and change the language mode to `Elasticsearch (es)` by pressing `ctrl+k,m` and select `es`. Elasticsearch queries and funtionalities are enabled in the es language mode in Visual Studio Code editor.
-- Create a new connection profile using command palette by pressing `F1`, type sqlman to run `Elastic: Set Host` command. See manage connection profile for more information about how to create and edit connection profiles in your User Settings (`settings.json`>`elastic.host`) file.
-- Write Elasticsearch query script in the editor using IntelliSense and Snippets.
-- Execute elastic queries by pressing button labeld: `Run Query` command. You can also use a shortcut (`ctrl+shift+e`). See customize shortcuts to learn about change shortcut key bindings to es queries.
-- View the elastic queries execution results and messages in result view.
+
 
 ## Commands
 

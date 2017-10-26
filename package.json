@@ -1,8 +1,8 @@
 {
 	"name": "elastic",
-	"displayName": "elasticsearch for vscode",
+	"displayName": "Elasticsearch for VSCode",
 	"description": "Elasticsearch client like Kibana console for vscode",
-	"version": "0.6.2",
+	"version": "0.6.5",
 	"publisher": "ria",
 	"icon": "media/elastic.png",
 	"engines": {
@@ -63,7 +63,7 @@
 			"properties": {
 				"elastic.showResultAsDocument": {
 					"type": "boolean",
-					"default": false,
+					"default": true,
 					"description": "Show result in a new json file, or show in default view"
 				}
 			}
