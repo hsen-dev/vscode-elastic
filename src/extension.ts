@@ -5,6 +5,7 @@ import * as vscode from 'vscode';
 import * as request from 'request';
 import url = require('url');
 import path = require('path');
+import * as fs from 'fs';
 
 
 import { ElasticCodeLensProvider } from './ElasticCodeLensProvider'
@@ -52,7 +53,7 @@ export function activate(context: vscode.ExtensionContext) {
     //     }
     // });
 
-    
+
 
     context.subscriptions.push(vscode.commands.registerCommand('elastic.execute', (em: ElasticMatch) => {
         executeQuery(context, resultsProvider, em);
@@ -99,7 +100,7 @@ export function activate(context: vscode.ExtensionContext) {
             editor.edit(editBuilder => {
                 if (em.HasBody) {
                     let txt = editor.document.getText(em.Body.Range)
-                    editBuilder.replace(em.Body.Range, JSON.stringify(JSON.parse(em.Body.Text), null, 2))
+                    editBuilder.replace(em.Body.Range, JSON.stringify(JSON.parse(em.Body.Text), null, 4))
                 }
             });
         } catch (error) {
@@ -137,32 +138,75 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
         protocol: 'http'
     });
 
+    const startTime = new Date().getTime();
+
+    const config = vscode.workspace.getConfiguration();
+    var asDocument = config.get("elastic.showResultAsDocument")
+    if (!asDocument) {
+        vscode.commands.executeCommand("vscode.previewHtml", resultsProvider.contentUri, vscode.ViewColumn.Two, 'ElasticSearch Query');
+        resultsProvider.update(context, host, '', startTime, 0, 'Executing query ...')
+    }
+
     const sbi = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
     sbi.text = "$(search) Executing query ...";
     sbi.show();
-    const startTime = new Date().getTime();
-    resultsProvider.update(context, host, '', startTime, 0, 'Executing query ...');
-    vscode.commands.executeCommand("vscode.previewHtml", resultsProvider.contentUri, vscode.ViewColumn.Two, 'ElasticSearch Query');
+
+
 
     request(<request.UrlOptions & request.CoreOptions>{
         url: requestUrl,
         method: em.Method.Text,
-        body: em.Body.Text
+        body: em.Body.Text,
+        headers: {
+            'Accept': 'application/json'
+        }
     }, (error, response, body) => {
 
         sbi.dispose();
         const endTime = new Date().getTime();
+
+
         if (error) {
-            // vscode.window.showErrorMessage(error.message);
-            resultsProvider.update(context, host, null, endTime - startTime, -1, error.message);
-            vscode.commands.executeCommand("vscode.previewHtml", resultsProvider.contentUri, vscode.ViewColumn.Two, 'ElasticSearch Results');
+            if (asDocument) {
+                vscode.window.showErrorMessage(error.message);
+            }
+            else {
+                resultsProvider.update(context, host, null, endTime - startTime, -1, error.message);
+                vscode.commands.executeCommand("vscode.previewHtml", resultsProvider.contentUri, vscode.ViewColumn.Two, 'ElasticSearch Results');
+            }
         }
         else {
+
             let results = body;
-            resultsProvider.update(context, host, results, endTime - startTime, response.statusCode, response.statusMessage);
-            vscode.commands.executeCommand("vscode.previewHtml", resultsProvider.contentUri, vscode.ViewColumn.Two, 'ElasticSearch Results');
+            if (asDocument) {
+                results = JSON.stringify(JSON.parse(results), null, 4)
+                showResult(results, vscode.window.activeTextEditor.viewColumn + 1)
+            }
+            else {
+                resultsProvider.update(context, host, results, endTime - startTime, response.statusCode, response.statusMessage);
+                vscode.commands.executeCommand("vscode.previewHtml", resultsProvider.contentUri, vscode.ViewColumn.Two, 'ElasticSearch Results');
+            }
         }
     })
+}
+
+
+function showResult(result: string, column?: vscode.ViewColumn): Thenable<void> {
+    let uri = vscode.Uri.file(path.join(vscode.workspace.rootPath, 'result.json'));
+    if (!fs.existsSync(uri.fsPath)) {
+        uri = uri.with({ scheme: 'untitled' });
+    }
+    return vscode.workspace.openTextDocument(uri)
+        .then(textDocument => vscode.window.showTextDocument(textDocument, column ? column > vscode.ViewColumn.Three ? vscode.ViewColumn.One : column : undefined, true))
+        .then(editor => {
+            editor.edit(editorBuilder => {
+                if (editor.document.lineCount > 0) {
+                    const lastLine = editor.document.lineAt(editor.document.lineCount - 1);
+                    editorBuilder.delete(new vscode.Range(new vscode.Position(0, 0), new vscode.Position(lastLine.range.start.line, lastLine.range.end.character)));
+                }
+                editorBuilder.insert(new vscode.Position(0, 0), result);
+            });
+        });
 }
 
 
