@@ -1,3 +1,9 @@
+## [0.6]
+- fixed issue [#1](https://github.com/hsen-dev/vscode-elastic/issues/1): elasticsearch logo style guides
+- adding [feature requested](https://github.com/hsen-dev/vscode-elastic/issues/3): `elastic.showResultAsDocument`: Show result in a new json file, or show in default view.
+- some bug fixes
+- better syntax highlight
+
 ## [0.5]
 - big changes: migrate execution of query to CodeLens.
 - add Json validator and `Auto indent` command.
