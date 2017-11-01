@@ -2,7 +2,7 @@
 	"name": "elastic",
 	"displayName": "Elasticsearch for VSCode",
 	"description": "Elasticsearch client like Kibana console for vscode",
-	"version": "0.6.5",
+	"version": "0.6.6",
 	"publisher": "ria",
 	"icon": "media/elastic.png",
 	"engines": {
@@ -50,12 +50,20 @@
 				"id": "es",
 				"aliases": [
 					"ElasticSearch",
-					"es"
+					"es",
+					"elasticsearch"
 				],
 				"extensions": [
 					"es"
 				],
-				"configuration": "./es.configuration.json"
+				"configuration": "./grammar/es.configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "es",
+				"scopeName": "source.es",
+				"path": "./grammar/es.tmLanguage"
 			}
 		],
 		"configuration": {
