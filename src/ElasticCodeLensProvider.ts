@@ -41,10 +41,9 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
                         title: "📂Open File",
                         command: "elastic.open",
                         arguments: [em]
-                    }
-
-                    ret.push(new vscode.CodeLens(em.Method.Range, command))
+                    }                    
                 }
+                ret.push(new vscode.CodeLens(em.Method.Range, command))
             }
             else {
                 if (em.File) {                    
