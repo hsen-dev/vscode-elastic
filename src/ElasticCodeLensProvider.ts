@@ -29,16 +29,42 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
             }))
 
             if (em.HasBody && em.Error.Range == null) {
-                ret.push(new vscode.CodeLens(em.Method.Range, {
-                    title: "⚡ Auto indent",
+                var command = {
+                    title: "⚡Auto indent",
                     command: "elastic.lint",
                     arguments: [em]
-                }))
+                }
+
+                if (em.File && em.File.Text) {
+
+                    command = {
+                        title: "📂Open File",
+                        command: "elastic.open",
+                        arguments: [em]
+                    }
+
+                    ret.push(new vscode.CodeLens(em.Method.Range, command))
+                }
             }
             else {
-                if (em.Error.Range != null) {
+                if (em.File) {                    
+                    command = {
+                        title: "⚠️File NotExist",
+                        command: "",
+                        arguments: undefined
+                    }
+                    if (em.File.Text){
+                        command = {
+                            title: "⚠️Invalid JsonFile",
+                            command: "",
+                            arguments: undefined
+                        }
+                    }
+                    ret.push(new vscode.CodeLens(em.Method.Range, command))
+                }
+                else if (em.Error.Range != null) {
                     ret.push(new vscode.CodeLens(em.Method.Range, {
-                        title: "⚠️ Invalid Json",
+                        title: "⚠️Invalid Json",
                         command: ""
                     }))
                 }

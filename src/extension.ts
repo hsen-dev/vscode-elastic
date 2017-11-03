@@ -73,11 +73,12 @@ export function activate(context: vscode.ExtensionContext) {
         //vscode.window.showInformationMessage('Ready!');
     });
 
-    // vscode.window.onDidChangeTextEditorSelection((e) => {
-    //     if (e.textEditor === vscode.window.activeTextEditor) {
-    //         // resultsProvider.update(previewUri);
-    //     }
-    // });
+    //vscode.window.onDidChangeTextEditorSelection((e) => {
+    //    if (e.textEditor === vscode.window.activeTextEditor) {
+            // decoration.bHighlight
+            // decoration.UpdateDecoration(e.textEditor)
+    //    }
+    //});
 
     context.subscriptions.push(vscode.commands.registerCommand('elastic.setHost', () => {
         setHost(context);
@@ -90,6 +91,13 @@ export function activate(context: vscode.ExtensionContext) {
         });
     });
 
+    context.subscriptions.push(vscode.commands.registerCommand('elastic.open', (em: ElasticMatch) => {
+        var column = 0
+        let uri = vscode.Uri.file(em.File.Text)
+        return vscode.workspace.openTextDocument(uri)
+            .then(textDocument => vscode.window.showTextDocument(textDocument, column ? column > vscode.ViewColumn.Three ? vscode.ViewColumn.One : column : undefined, true))
+
+    }));
 
     context.subscriptions.push(vscode.commands.registerCommand('elastic.lint', (em: ElasticMatch) => {
 
@@ -110,10 +118,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 }
 
-let highlight = vscode.window.createTextEditorDecorationType({
-    backgroundColor: 'rgba(100,100,100,0.3)'
-});
-
 async function setHost(context: vscode.ExtensionContext): Promise<string> {
     let options: vscode.InputBoxOptions;
 
@@ -129,8 +133,6 @@ async function setHost(context: vscode.ExtensionContext): Promise<string> {
 
 export async function executeQuery(context: vscode.ExtensionContext, resultsProvider: ElasticContentProvider, em: ElasticMatch) {
     const host: string = context.workspaceState.get("elastic.host", null) || await setHost(context);
-    // const query = parseSearchQuery(code);
-
 
     const requestUrl: string = url.format({
         host,
