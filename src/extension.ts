@@ -12,6 +12,7 @@ import { ElasticCodeLensProvider } from './ElasticCodeLensProvider'
 import { ElasticContentProvider } from './ElasticContentProvider'
 import { ElasticDecoration } from './ElasticDecoration'
 import { ElasticMatch } from './ElasticMatch'
+import { ElasticCompletionItemProvider } from './ElasticCompletionItemProvider'
 
 // import { JSONCompletionItemProvider } from "./JSONCompletionItemProvider";
 
@@ -115,6 +116,8 @@ export function activate(context: vscode.ExtensionContext) {
             console.log(error.message)
         }
     }));
+
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider(languages, new ElasticCompletionItemProvider(context), '/'));
 
 }
 

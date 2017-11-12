@@ -1,0 +1,25 @@
+{
+  "get_script": {
+    "documentation": "https://www.elastic.co/guide/en/elasticsearch/reference/5.x/modules-scripting.html",
+    "methods": ["GET"],
+    "url": {
+      "path": "/_scripts/{lang}",
+      "paths": [ "/_scripts/{lang}", "/_scripts/{lang}/{id}" ],
+      "parts": {
+        "id": {
+          "type" : "string",
+          "description" : "Script ID",
+          "required" : true
+        },
+        "lang" : {
+          "type" : "string",
+          "description" : "Script language",
+          "required" : true
+        }
+      },
+      "params" : {
+      }
+    },
+    "body": null
+  }
+}
