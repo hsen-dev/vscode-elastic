@@ -160,7 +160,8 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
         method: em.Method.Text,
         body: em.Body.Text,
         headers: {
-            'Accept': 'application/json'
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         }
     }, (error, response, body) => {
 
