@@ -12,14 +12,17 @@ import { ElasticCodeLensProvider } from './ElasticCodeLensProvider'
 import { ElasticContentProvider } from './ElasticContentProvider'
 import { ElasticDecoration } from './ElasticDecoration'
 import { ElasticMatch } from './ElasticMatch'
+import { ElasticCompletionItemProvider } from './ElasticCompletionItemProvider'
 
 // import { JSONCompletionItemProvider } from "./JSONCompletionItemProvider";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
 
     // vscode.workspace.getConfiguration(section)
+
+    context.workspaceState.get("elastic.host", null) || await setHost(context);
 
     const languages = ['es'];
 
@@ -61,11 +64,17 @@ export function activate(context: vscode.ExtensionContext) {
 
 
     let decoration = new ElasticDecoration(context)
+    let esMatches = { list: null };
 
     vscode.workspace.onDidChangeTextDocument((e) => {
         var editor = vscode.window.activeTextEditor
         if (e.document === editor.document) {
-            decoration.UpdateDecoration(editor)
+            esMatches.list = decoration.UpdateDecoration(editor)
+                .sort((a: ElasticMatch, b: ElasticMatch) => {
+                    if (a.Method.Range.start.line > b.Method.Range.start.line) return 1;
+                    if (a.Method.Range.start.line < b.Method.Range.start.line) return -1;
+                    return 0;
+                });
         }
     });
 
@@ -115,6 +124,9 @@ export function activate(context: vscode.ExtensionContext) {
             console.log(error.message)
         }
     }));
+
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider(languages, 
+        new ElasticCompletionItemProvider(context, esMatches), '/', '?', '&', '"'));
 
 }
 
