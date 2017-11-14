@@ -1,6 +1,15 @@
+
+## [0.8]
+with contributation o [@tsouza](https://github.com/tsouza):
+- add simple IntelliSense/autocomplete for methods path
+
+## [0.7]
+- Get Payload from File ([requested feature](https://github.com/hsen-dev/vscode-elastic/issues/4))
+
+
 ## [0.6]
 - fixed issue [#1](https://github.com/hsen-dev/vscode-elastic/issues/1): elasticsearch logo style guides
-- adding [feature requested](https://github.com/hsen-dev/vscode-elastic/issues/3): `elastic.showResultAsDocument`: Show result in a new json file, or show in default view.
+- adding [requested feature](https://github.com/hsen-dev/vscode-elastic/issues/3): `elastic.showResultAsDocument`: Show result in a new json file, or show in default view.
 - some bug fixes
 - better syntax highlight
 
