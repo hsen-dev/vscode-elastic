@@ -6,6 +6,7 @@ import * as request from 'request';
 import url = require('url');
 import path = require('path');
 import * as fs from 'fs';
+import * as os from 'os';
 
 
 import { ElasticCodeLensProvider } from './ElasticCodeLensProvider'
@@ -207,7 +208,10 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
 
 
 function showResult(result: string, column?: vscode.ViewColumn): Thenable<void> {
-    let uri = vscode.Uri.file(path.join(vscode.workspace.rootPath, 'result.json'));
+    const tempResultFilePath = path.join(os.homedir(), '.vscode-elastic');
+    const resultFilePath = vscode.workspace.rootPath || tempResultFilePath;
+
+    let uri = vscode.Uri.file(path.join(resultFilePath, 'result.json'));
     if (!fs.existsSync(uri.fsPath)) {
         uri = uri.with({ scheme: 'untitled' });
     }
