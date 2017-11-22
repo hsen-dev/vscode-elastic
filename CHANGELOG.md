@@ -1,7 +1,10 @@
 
 ## [0.8]
-with contributation o [@tsouza](https://github.com/tsouza):
+with contribution of [@tsouza](https://github.com/tsouza):
 - add simple IntelliSense/autocomplete for methods path
+
+with contribution of [@heatwave](https://github.com/heatwave):
+- bug fixes with @heatwave
 
 ## [0.7]
 - Get Payload from File ([requested feature](https://github.com/hsen-dev/vscode-elastic/issues/4))
