@@ -195,8 +195,12 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
 
             let results = body;
             if (asDocument) {
-                results = JSON.stringify(JSON.parse(results), null, 4)
-                showResult(results, vscode.window.activeTextEditor.viewColumn + 1)
+                try {
+                    results = JSON.stringify(JSON.parse(results), null, 4);
+                } catch (error) {
+                    results = body;
+                }
+                showResult(results, vscode.window.activeTextEditor.viewColumn + 1);
             }
             else {
                 resultsProvider.update(context, host, results, endTime - startTime, response.statusCode, response.statusMessage);
