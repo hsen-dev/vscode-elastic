@@ -62,7 +62,7 @@ export class ElasticCompletionItemProvider implements vscode.CompletionItemProvi
         
         let esVersion = await this.getElasticVersion();
         if (!esVersion)
-        return [];
+            return [];
 
         let esMatch = this.findActiveESMatch(position);
         if (!esMatch)
