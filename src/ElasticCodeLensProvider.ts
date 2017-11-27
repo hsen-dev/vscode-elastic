@@ -16,8 +16,6 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
         const editor = vscode.window.activeTextEditor;
         var eMatches = this.decoration.UpdateDecoration(editor)
 
-        // "⚡ ↯ ▷↓↑ Lint"
-
         var ret = [];
 
         eMatches.forEach(em => {
@@ -28,7 +26,7 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
                 arguments: [em]
             }))
 
-            if (em.HasBody && em.Error.Range == null) {
+            if (em.HasBody && em.Error.Text == null) {
                 var command = {
                     title: "⚡Auto indent",
                     command: "elastic.lint",
@@ -61,7 +59,7 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
                     }
                     ret.push(new vscode.CodeLens(em.Method.Range, command))
                 }
-                else if (em.Error.Range != null) {
+                else if (em.Error.Text != null) {
                     ret.push(new vscode.CodeLens(em.Method.Range, {
                         title: "⚠️Invalid Json",
                         command: ""
