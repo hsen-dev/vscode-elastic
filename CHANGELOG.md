@@ -1,10 +1,11 @@
 
-## [0.8]
-with contribution of [@tsouza](https://github.com/tsouza):
-- add simple IntelliSense/autocomplete for methods path
+## [0.9]
+- [@tsouza](https://github.com/tsouza): add IntelliSense/autocomplete for es6
+- bug fixes
 
-with contribution of [@heatwave](https://github.com/heatwave):
-- bug fixes with @heatwave
+## [0.8]
+- [@tsouza](https://github.com/tsouza): add simple IntelliSense/autocomplete for methods path
+- [@heatwave](https://github.com/heatwave): bug fixes
 
 ## [0.7]
 - Get Payload from File ([requested feature](https://github.com/hsen-dev/vscode-elastic/issues/4))
