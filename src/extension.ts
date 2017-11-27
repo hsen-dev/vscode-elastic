@@ -1,6 +1,7 @@
 'use strict';
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+import * as querystring from 'querystring';
 import * as vscode from 'vscode';
 import * as request from 'request';
 import url = require('url');
@@ -147,11 +148,13 @@ async function setHost(context: vscode.ExtensionContext): Promise<string> {
 export async function executeQuery(context: vscode.ExtensionContext, resultsProvider: ElasticContentProvider, em: ElasticMatch) {
     const host: string = context.workspaceState.get("elastic.host", null) || await setHost(context);
 
+    const parsedPath = em.Path.Text.split('?');
+
     const requestUrl: string = url.format({
         host,
-        pathname: em.Path.Text,
+        pathname: parsedPath[0],
         protocol: 'http'
-    });
+    }) + "?" + parsedPath[1];
 
     const startTime = new Date().getTime();
 
