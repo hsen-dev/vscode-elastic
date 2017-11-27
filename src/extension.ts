@@ -149,12 +149,13 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
     const host: string = context.workspaceState.get("elastic.host", null) || await setHost(context);
 
     const parsedPath = em.Path.Text.split('?');
+    const urlParams = parsedPath[1] ? '?' + parsedPath[1] : '';
 
     const requestUrl: string = url.format({
         host,
         pathname: parsedPath[0],
         protocol: 'http'
-    }) + "?" + parsedPath[1];
+    }) + urlParams;
 
     const startTime = new Date().getTime();
 
