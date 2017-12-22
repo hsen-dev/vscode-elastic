@@ -16,10 +16,17 @@ export class ElasticMatch {
     Body: ElasticItem
     Method: ElasticItem
     File: ElasticItem
+    Range: vscode.Range
     HasBody: boolean = false
+    Selected: boolean = false
 
-    public constructor(Method: ElasticItem) {
-        this.Method = Method;
+    public constructor(headLine: vscode.TextLine, match) {
+
+        let lrange = new vscode.Range(headLine.lineNumber, match[1].length + 1, headLine.lineNumber, headLine.text.length);
+        let mrange = new vscode.Range(headLine.lineNumber, 0, headLine.lineNumber, match[1].length);
+
+        this.Method = { Text: match[1], Range: mrange }
+        this.Path = { Text: match[2], Range: lrange }
         this.Body = new ElasticItem()
         this.Error = new ElasticItem()
 
@@ -35,8 +42,6 @@ export class ElasticMatch {
             lm = editor.document.lineAt(ln).text.length
             ln++;
         }
-
-        var ggg = path.join(path.dirname(editor.document.uri.fsPath), )
 
         txt = txt.substring(0, txt.length - 1)
 
@@ -60,21 +65,23 @@ export class ElasticMatch {
             }
         }
 
-
-
         try {
             JSON.parse(stripJsonComments(jsonText))
             this.HasBody = true
+            this.Range = new vscode.Range(this.Method.Range.start, this.Body.Range.end)
             this.Body.Text = txt
         } catch (error) {
-            console.error(error.message)
+            // console.error(error.message)
             this.HasBody = false
-            this.Error.Text = error.message
-            this.Error.Range = this.GetErrorRangeFromMessage(txt, error.message)
+            this.Range = new vscode.Range(this.Method.Range.start, this.Path.Range.end)
+            this.Error = this.GetErrorFromMessage(txt, error.message)
         }
     }
 
-    GetErrorRangeFromMessage(text: string, message: string): vscode.Range {
+    GetErrorFromMessage(text: string, message: string): ElasticItem {
+
+        var res = new ElasticItem()
+
         var regexp = /Position\s(\d+)/gim;
         var match = regexp.exec(message);
         if (match) {
@@ -83,14 +90,14 @@ export class ElasticMatch {
             var lines: string[] = text.split("\n")
             var char = lines[lines.length - 1].length
             var line = lines.length + this.Method.Range.start.line;
-            return new vscode.Range(line, char, line, char + 1)
+            res.Range = new vscode.Range(line, char, line, char + 1)
         }
 
-        return null;
+        if (text.trim().length > 0)
+            res.Text = message
+
+        return res;
     }
-
-
-
 }
 
 

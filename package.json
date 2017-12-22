@@ -2,7 +2,7 @@
 	"name": "elastic",
 	"displayName": "Elasticsearch for VSCode",
 	"description": "Elasticsearch client like Kibana console for vscode",
-	"version": "0.9.0",
+	"version": "0.10.0",
 	"publisher": "ria",
 	"icon": "media/elastic.png",
 	"engines": {
@@ -75,7 +75,14 @@
 					"description": "Show result in a new json file, or show in default view"
 				}
 			}
-		}
+		},
+		"keybindings": [
+			{
+				"command": "elastic.execute",
+				"key": "alt+Enter",
+				"when": "editorTextFocus && resourceLangId==es"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

@@ -15,6 +15,8 @@ import { ElasticContentProvider } from './ElasticContentProvider'
 import { ElasticDecoration } from './ElasticDecoration'
 import { ElasticMatch } from './ElasticMatch'
 import { ElasticCompletionItemProvider } from './ElasticCompletionItemProvider'
+import { ElasticMatches } from './ElasticMatches'
+import { Selection } from 'vscode';
 
 // import { JSONCompletionItemProvider } from "./JSONCompletionItemProvider";
 
@@ -60,23 +62,20 @@ export async function activate(context: vscode.ExtensionContext) {
 
 
 
-    context.subscriptions.push(vscode.commands.registerCommand('elastic.execute', (em: ElasticMatch) => {
-        executeQuery(context, resultsProvider, em);
-    }));
 
 
+
+
+    let esMatches = new ElasticMatches(vscode.window.activeTextEditor)
     let decoration = new ElasticDecoration(context)
-    let esMatches = { list: null };
+    decoration.UpdateDecoration(esMatches)
+
 
     vscode.workspace.onDidChangeTextDocument((e) => {
         var editor = vscode.window.activeTextEditor
         if (e.document === editor.document) {
-            esMatches.list = decoration.UpdateDecoration(editor)
-                .sort((a: ElasticMatch, b: ElasticMatch) => {
-                    if (a.Method.Range.start.line > b.Method.Range.start.line) return 1;
-                    if (a.Method.Range.start.line < b.Method.Range.start.line) return -1;
-                    return 0;
-                });
+            esMatches = new ElasticMatches(editor)
+            decoration.UpdateDecoration(esMatches)
         }
     });
 
@@ -84,12 +83,24 @@ export async function activate(context: vscode.ExtensionContext) {
         //vscode.window.showInformationMessage('Ready!');
     });
 
-    //vscode.window.onDidChangeTextEditorSelection((e) => {
-    //    if (e.textEditor === vscode.window.activeTextEditor) {
-            // decoration.bHighlight
-            // decoration.UpdateDecoration(e.textEditor)
-    //    }
-    //});
+    vscode.window.onDidChangeTextEditorSelection((e) => {
+        if (e.textEditor === vscode.window.activeTextEditor) {
+            esMatches.UpdateSelection(e.selections[0])
+            decoration.UpdateDecoration(esMatches)
+        }
+    });
+
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider(languages,
+        new ElasticCompletionItemProvider(context), '/', '?', '&', '"'));
+
+    context.subscriptions.push(vscode.commands.registerCommand('elastic.execute', (em: ElasticMatch) => {
+        if (!em.Path) {
+            em = esMatches.Selection
+        }
+
+        executeQuery(context, resultsProvider, em)
+
+    }));
 
     context.subscriptions.push(vscode.commands.registerCommand('elastic.setHost', () => {
         setHost(context);
@@ -127,8 +138,6 @@ export async function activate(context: vscode.ExtensionContext) {
         }
     }));
 
-    context.subscriptions.push(vscode.languages.registerCompletionItemProvider(languages, 
-        new ElasticCompletionItemProvider(context, esMatches), '/', '?', '&', '"'));
 
 }
 
@@ -213,6 +222,8 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
         }
     })
 }
+
+
 
 
 function showResult(result: string, column?: vscode.ViewColumn): Thenable<void> {

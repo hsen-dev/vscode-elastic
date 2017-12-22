@@ -1,9 +1,10 @@
 import { ElasticMatch } from './ElasticMatch';
+import { ElasticMatches } from './ElasticMatches';
 'use script';
 
 import * as vscode from 'vscode';
 import * as request from 'request';
-import { Range, ParameterInformation, commands } from 'vscode';
+import { Range, ParameterInformation, commands, Selection } from 'vscode';
 import url = require('url');
 import routington = require('routington');
 import closestSemver = require('semver-closest');
@@ -12,12 +13,9 @@ export class ElasticCompletionItemProvider implements vscode.CompletionItemProvi
 
     private readonly context: vscode.ExtensionContext;
     private readonly restSpec: any;
-    private readonly esMatches: any;
 
-    constructor(context: vscode.ExtensionContext, esMatches: any) {
+    constructor(context: vscode.ExtensionContext) {
         this.context = context;
-        this.esMatches = esMatches;
-
         this.restSpec = this.buildRestSpecRouter();
     }
 
@@ -59,12 +57,14 @@ export class ElasticCompletionItemProvider implements vscode.CompletionItemProvi
     }
 
     private async asyncProvideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.CompletionItem[] | vscode.CompletionList> {
-        
+               
+
         let esVersion = await this.getElasticVersion();
         if (!esVersion)
             return [];
 
-        let esMatch = this.findActiveESMatch(position);
+        const editor = vscode.window.activeTextEditor
+        let esMatch = new ElasticMatches(editor).Selection
         if (!esMatch)
             return [];
 
@@ -135,15 +135,6 @@ export class ElasticCompletionItemProvider implements vscode.CompletionItemProvi
             
         return result.filter(part => part.label.length)
             .map(part => new vscode.CompletionItem(part.label));
-    }
-
-    private findActiveESMatch(position: vscode.Position): ElasticMatch {
-        return this.esMatches.list.find((esMatch: ElasticMatch) => {
-            if (position.line >= esMatch.Method.Range.start.line &&
-                (!esMatch.HasBody || position.line <= esMatch.Body.Range.end.line))
-                    return esMatch;
-            return null;
-        });
     }
 
     private isPathCompletion(esMatch: ElasticMatch, position: vscode.Position): boolean {
