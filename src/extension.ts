@@ -9,14 +9,14 @@ import path = require('path');
 import * as fs from 'fs';
 import * as os from 'os';
 
+import { Selection, TextDocument } from 'vscode';
 
+import { ElasticCompletionItemProvider } from './ElasticCompletionItemProvider'
 import { ElasticCodeLensProvider } from './ElasticCodeLensProvider'
 import { ElasticContentProvider } from './ElasticContentProvider'
 import { ElasticDecoration } from './ElasticDecoration'
 import { ElasticMatch } from './ElasticMatch'
-import { ElasticCompletionItemProvider } from './ElasticCompletionItemProvider'
 import { ElasticMatches } from './ElasticMatches'
-import { Selection } from 'vscode';
 
 // import { JSONCompletionItemProvider } from "./JSONCompletionItemProvider";
 
@@ -24,14 +24,9 @@ import { Selection } from 'vscode';
 // your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
 
-    // vscode.workspace.getConfiguration(section)
-
     context.workspaceState.get("elastic.host", null) || await setHost(context);
-
     const languages = ['es'];
-
     context.subscriptions.push(vscode.languages.registerCodeLensProvider(languages, new ElasticCodeLensProvider(context)));
-
 
 
     // let provider = new JSONCompletionItemProvider();
@@ -61,20 +56,29 @@ export async function activate(context: vscode.ExtensionContext) {
     // });
 
 
+    let esMatches: ElasticMatches
+    let decoration: ElasticDecoration
 
+    function checkEditor(document:vscode.TextDocument):Boolean{
+        if (document === vscode.window.activeTextEditor.document && document.languageId == 'es') {        
+            if (esMatches == null || decoration == null) {
+                esMatches = new ElasticMatches(vscode.window.activeTextEditor)
+                decoration = new ElasticDecoration(context)                           
+            }
+            return true       
+        }
+        return false
+    }
 
-
-
-
-    let esMatches = new ElasticMatches(vscode.window.activeTextEditor)
-    let decoration = new ElasticDecoration(context)
-    decoration.UpdateDecoration(esMatches)
-
+    if (checkEditor(vscode.window.activeTextEditor.document)) {
+        esMatches = new ElasticMatches(vscode.window.activeTextEditor)
+        decoration.UpdateDecoration(esMatches)
+    }
+    
 
     vscode.workspace.onDidChangeTextDocument((e) => {
-        var editor = vscode.window.activeTextEditor
-        if (e.document === editor.document) {
-            esMatches = new ElasticMatches(editor)
+        if (checkEditor(e.document)) {
+            esMatches = new ElasticMatches(vscode.window.activeTextEditor)
             decoration.UpdateDecoration(esMatches)
         }
     });
@@ -84,8 +88,8 @@ export async function activate(context: vscode.ExtensionContext) {
     });
 
     vscode.window.onDidChangeTextEditorSelection((e) => {
-        if (e.textEditor === vscode.window.activeTextEditor) {
-            esMatches.UpdateSelection(e.selections[0])
+        if (checkEditor(e.textEditor.document)) {
+            esMatches.UpdateSelection(e.textEditor)
             decoration.UpdateDecoration(esMatches)
         }
     });
@@ -97,7 +101,6 @@ export async function activate(context: vscode.ExtensionContext) {
         if (!em.Path) {
             em = esMatches.Selection
         }
-
         executeQuery(context, resultsProvider, em)
 
     }));

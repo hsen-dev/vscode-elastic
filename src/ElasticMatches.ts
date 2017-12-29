@@ -42,21 +42,15 @@ export class ElasticMatches {
             }
         }
 
-        this.UpdateSelection()
+        this.UpdateSelection(editor)
     }
 
-    public UpdateSelection(selection: vscode.Selection = null) {
-
-        this.Selection = null
-
-        if (selection == null)
-            selection = this.Editor.selection
-
+    public UpdateSelection(editor) {
+        this.Editor = editor
         this.Matches.forEach(element => {
-            element.Selected = element.Range.contains(selection)
+            element.Selected = element.Range.contains(editor.selection)
             if (element.Selected)
                 this.Selection = element
         });
-
     }
 }
