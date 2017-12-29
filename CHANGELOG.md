@@ -1,6 +1,7 @@
 
 ## [0.10]
 - adding requested feature: [keybindings](https://github.com/hsen-dev/vscode-elastic/issues/5)
+- fix some decorations issues
 
 ## [0.9]
 - [@tsouza](https://github.com/tsouza): add IntelliSense/autocomplete for es6
