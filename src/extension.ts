@@ -60,12 +60,12 @@ export async function activate(context: vscode.ExtensionContext) {
     let decoration: ElasticDecoration
 
     function checkEditor(document:vscode.TextDocument):Boolean{
-        if (document === vscode.window.activeTextEditor.document && document.languageId == 'es') {        
+        if (document === vscode.window.activeTextEditor.document && document.languageId == 'es') {
             if (esMatches == null || decoration == null) {
                 esMatches = new ElasticMatches(vscode.window.activeTextEditor)
-                decoration = new ElasticDecoration(context)                           
+                decoration = new ElasticDecoration(context)
             }
-            return true       
+            return true
         }
         return false
     }
@@ -74,7 +74,7 @@ export async function activate(context: vscode.ExtensionContext) {
         esMatches = new ElasticMatches(vscode.window.activeTextEditor)
         decoration.UpdateDecoration(esMatches)
     }
-    
+
 
     vscode.workspace.onDidChangeTextDocument((e) => {
         if (checkEditor(e.document)) {
@@ -127,13 +127,15 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerCommand('elastic.lint', (em: ElasticMatch) => {
 
         try {
-            let l = em.Method.Range.start.line + 1
-            const editor = vscode.window.activeTextEditor
+            let l = em.Method.Range.start.line + 1;
+            const editor = vscode.window.activeTextEditor;
+            const config = vscode.workspace.getConfiguration('editor');
+            const tabSize = +config.get('tabSize');
 
             editor.edit(editBuilder => {
                 if (em.HasBody) {
                     let txt = editor.document.getText(em.Body.Range)
-                    editBuilder.replace(em.Body.Range, JSON.stringify(JSON.parse(em.Body.Text), null, 4))
+                    editBuilder.replace(em.Body.Range, JSON.stringify(JSON.parse(em.Body.Text), null, tabSize))
                 }
             });
         } catch (error) {
@@ -212,7 +214,9 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
             let results = body;
             if (asDocument) {
                 try {
-                    results = JSON.stringify(JSON.parse(results), null, 4);
+                    const config = vscode.workspace.getConfiguration('editor');
+                    const tabSize = +config.get('tabSize');
+                    results = JSON.stringify(JSON.parse(results), null, tabSize);
                 } catch (error) {
                     results = body;
                 }
