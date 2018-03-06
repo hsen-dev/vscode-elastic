@@ -129,11 +129,13 @@ export async function activate(context: vscode.ExtensionContext) {
         try {
             let l = em.Method.Range.start.line + 1
             const editor = vscode.window.activeTextEditor
+            const config = vscode.workspace.getConfiguration('editor');
+            const tabSize = +config.get('tabSize');
 
             editor.edit(editBuilder => {
                 if (em.HasBody) {
                     let txt = editor.document.getText(em.Body.Range)
-                    editBuilder.replace(em.Body.Range, JSON.stringify(JSON.parse(em.Body.Text), null, 4))
+                    editBuilder.replace(em.Body.Range, JSON.stringify(JSON.parse(em.Body.Text), null, tabSize))
                 }
             });
         } catch (error) {
@@ -212,7 +214,9 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
             let results = body;
             if (asDocument) {
                 try {
-                    results = JSON.stringify(JSON.parse(results), null, 4);
+                    const config = vscode.workspace.getConfiguration('editor');
+                    const tabSize = +config.get('tabSize');
+                    results = JSON.stringify(JSON.parse(results), null, tabSize);
                 } catch (error) {
                     results = body;
                 }
