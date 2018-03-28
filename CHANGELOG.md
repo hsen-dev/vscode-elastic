@@ -1,4 +1,8 @@
 
+## [0.11]
+- [@jgowdyelastic](https://github.com/jgowdyelastic): Using tabSize setting for json indentation
+- minor bugfix
+
 ## [0.10]
 - adding requested feature: [keybindings](https://github.com/hsen-dev/vscode-elastic/issues/5)
 - fix some decorations issues
