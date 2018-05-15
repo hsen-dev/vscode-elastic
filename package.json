@@ -78,6 +78,11 @@
 		},
 		"keybindings": [
 			{
+				"key": "ctrl+enter",
+				"command": "elastic.execute",
+				"when": "editorTextFocus && resourceLangId == 'es'"
+			},
+			{
 				"command": "elastic.execute",
 				"key": "alt+Enter",
 				"when": "editorTextFocus && resourceLangId==es"
