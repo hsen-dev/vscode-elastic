@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { ElasticMatch } from './ElasticMatch'
+import { ElasticMatch } from './ElasticMatch';
 
 
 
@@ -30,10 +30,7 @@ export class ElasticMatches {
                 this.Matches[this.Matches.length - 1].HasBody = true
 
             matched = false
-
-            // https://stackoverflow.com/a/1547940/1495442
-            var regexp = /^(GET|POST|DELETE|PUT)\s+([A-Za-z0-9\-\._~:\/#\[\]@!$&'\(\)\*+,;=`?]+)\s*$/gim;
-            var match = regexp.exec(line.text);
+            var match = ElasticMatch.RegexMatch.exec(line.text);
 
             if (match != null) {
                 matched = true

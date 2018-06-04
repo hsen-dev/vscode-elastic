@@ -11,6 +11,7 @@ export class ElasticItem {
 
 export class ElasticMatch {
 
+    static RegexMatch: RegExp = /^(GET|POST|DELETE|PUT)\s+([A-Za-z0-9\-\._~:\/#\[\]@!$&'\(\)\*+,;=`?]+)\s*$/gim;
     Error: ElasticItem
     Path: ElasticItem
     Body: ElasticItem
@@ -36,11 +37,19 @@ export class ElasticMatch {
         let txt = ""
         let line = this.Method.Range.start.line + 1
         let ln = line
+        
+        while (editor.document.lineCount > ln) {
+            var t = editor.document.lineAt(ln).text
 
-        while (editor.document.lineCount > ln && editor.document.lineAt(ln).text.trim().length > 0) {
-            txt += editor.document.lineAt(ln).text + "\n"
+            var m = ElasticMatch.RegexMatch.exec(t)
+            if (m != null) break
+
+            txt += t + "\n"
             lm = editor.document.lineAt(ln).text.length
             ln++;
+            var o = txt.split("{").length 
+            var c = txt.split("}").length 
+            if (o == c) break            
         }
 
         txt = txt.substring(0, txt.length - 1)
