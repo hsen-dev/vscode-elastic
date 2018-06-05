@@ -160,15 +160,24 @@ async function setHost(context: vscode.ExtensionContext): Promise<string> {
 }
 
 export async function executeQuery(context: vscode.ExtensionContext, resultsProvider: ElasticContentProvider, em: ElasticMatch) {
-    const host: string = context.workspaceState.get("elastic.host", null) || await setHost(context);
+    var host: string = context.workspaceState.get("elastic.host", null) || await setHost(context);
 
     const parsedPath = em.Path.Text.split('?');
     const urlParams = parsedPath[1] ? '?' + parsedPath[1] : '';
 
+    var protocol= 'http'
+    var regex = RegExp(/^(https?):\/\/(.+)*$/gim)
+  
+    var match = regex.exec(host)
+    if (match != null){
+        protocol = match[1]
+        host = match[2]
+    }
+
     const requestUrl: string = url.format({
         host,
         pathname: parsedPath[0],
-        protocol: 'http'
+        protocol: protocol
     }) + urlParams;
 
     const startTime = new Date().getTime();
