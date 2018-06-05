@@ -1,4 +1,9 @@
 
+## [0.12]
+- [@KenDobbins](https://github.com/KenDobbins): Allow ctrl+enter to run command
+- better request body selection (blank line allowed)
+- simple protocol (https) support
+
 ## [0.11]
 - [@jgowdyelastic](https://github.com/jgowdyelastic): Using tabSize setting for json indentation
 - minor bugfix
