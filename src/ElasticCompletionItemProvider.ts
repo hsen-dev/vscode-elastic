@@ -9,7 +9,9 @@ import url = require('url');
 import routington = require('routington');
 import closestSemver = require('semver-closest');
 
-export class ElasticCompletionItemProvider implements vscode.CompletionItemProvider {
+import * as os from 'os';
+
+export class ElasticCompletionItemProvider implements vscode.CompletionItemProvider, vscode.HoverProvider  {
 
     private readonly context: vscode.ExtensionContext;
     private readonly restSpec: any;
@@ -56,10 +58,57 @@ export class ElasticCompletionItemProvider implements vscode.CompletionItemProvi
         return this.asyncProvideCompletionItems(document, position, token);    
     }
 
+    provideHover(document: vscode.TextDocument, position: vscode.Position): Promise<vscode.Hover> {
+        return this.asyncProvideHover(document, position);    
+
+        
+    }
+
+    private async asyncProvideHover(document: vscode.TextDocument, position: vscode.Position): Promise<vscode.Hover> {
+        let esVersion = await this.getElasticVersion();
+        esVersion = '6.0.0'
+        if (!esVersion)
+            return;
+
+        let apiVersion = closestSemver(esVersion, Object.keys(this.restSpec));
+        let restSpec = this.restSpec[apiVersion];
+        if (!restSpec)
+            return;
+
+        const line = document.lineAt(position);
+        var match = ElasticMatch.RegexMatch.exec(line.text);
+
+        var params = []
+
+
+        if (match != null) {
+            let range = line.range;
+            var path = match[2].split('?')[0];
+            var signature = path.split('/').pop();
+            const m = restSpec.match(`${match[1]}${path}`)
+            params.push(`${m.node.spec.body.description}`)
+
+            if (m.node.spec.url.params) {
+                params.push(os.EOL + 'url params:')
+                for (var i in m.node.spec.url.params) {
+                    var p = m.node.spec.url.params[i];
+                    var text = `* ${i} *(${p.type})*`
+                    params.push(text)
+                }
+            }
+
+            var htm = [`${m.node.spec.methods.join(' | ')} **${m.node.string}** ([documentation](${m.node.spec.documentation}))`, params.join(os.EOL)];
+
+            return Promise.resolve<vscode.Hover>(new vscode.Hover(htm, range));
+        }
+        return;
+    }
+
     private async asyncProvideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): Promise<vscode.CompletionItem[] | vscode.CompletionList> {
                
 
         let esVersion = await this.getElasticVersion();
+        esVersion = '6.0.0'
         if (!esVersion)
             return [];
 

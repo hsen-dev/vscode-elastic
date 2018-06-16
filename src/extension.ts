@@ -9,6 +9,7 @@ import path = require('path');
 import * as fs from 'fs';
 import * as os from 'os';
 
+
 import { Selection, TextDocument } from 'vscode';
 
 import { ElasticCompletionItemProvider } from './ElasticCompletionItemProvider'
@@ -27,6 +28,8 @@ export async function activate(context: vscode.ExtensionContext) {
     context.workspaceState.get("elastic.host", null) || await setHost(context);
     const languages = ['es'];
     context.subscriptions.push(vscode.languages.registerCodeLensProvider(languages, new ElasticCodeLensProvider(context)));
+
+
 
 
     // let provider = new JSONCompletionItemProvider();
@@ -59,13 +62,13 @@ export async function activate(context: vscode.ExtensionContext) {
     let esMatches: ElasticMatches
     let decoration: ElasticDecoration
 
-    function checkEditor(document:vscode.TextDocument):Boolean{
-        if (document === vscode.window.activeTextEditor.document && document.languageId == 'es') {        
+    function checkEditor(document: vscode.TextDocument): Boolean {
+        if (document === vscode.window.activeTextEditor.document && document.languageId == 'es') {
             if (esMatches == null || decoration == null) {
                 esMatches = new ElasticMatches(vscode.window.activeTextEditor)
-                decoration = new ElasticDecoration(context)                           
+                decoration = new ElasticDecoration(context)
             }
-            return true       
+            return true
         }
         return false
     }
@@ -74,7 +77,7 @@ export async function activate(context: vscode.ExtensionContext) {
         esMatches = new ElasticMatches(vscode.window.activeTextEditor)
         decoration.UpdateDecoration(esMatches)
     }
-    
+
 
     vscode.workspace.onDidChangeTextDocument((e) => {
         if (checkEditor(e.document)) {
@@ -93,9 +96,10 @@ export async function activate(context: vscode.ExtensionContext) {
             decoration.UpdateDecoration(esMatches)
         }
     });
+    let esCompletionHover = new ElasticCompletionItemProvider(context);
 
-    context.subscriptions.push(vscode.languages.registerCompletionItemProvider(languages,
-        new ElasticCompletionItemProvider(context), '/', '?', '&', '"'));
+    context.subscriptions.push(vscode.languages.registerCompletionItemProvider(languages, esCompletionHover, '/', '?', '&', '"'));
+    context.subscriptions.push(vscode.languages.registerHoverProvider(languages, esCompletionHover));
 
     context.subscriptions.push(vscode.commands.registerCommand('elastic.execute', (em: ElasticMatch) => {
         if (!em.Path) {
@@ -165,11 +169,11 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
     const parsedPath = em.Path.Text.split('?');
     const urlParams = parsedPath[1] ? '?' + parsedPath[1] : '';
 
-    var protocol= 'http'
+    var protocol = 'http'
     var regex = RegExp(/^(https?):\/\/(.+)*$/gim)
-  
+
     var match = regex.exec(host)
-    if (match != null){
+    if (match != null) {
         protocol = match[1]
         host = match[2]
     }
