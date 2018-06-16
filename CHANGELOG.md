@@ -1,3 +1,5 @@
+## [0.13]
+- show simple documention of urls endpoints and its external links to [elastic.co](https://elastic.co) on hover.
 
 ## [0.12]
 - [@KenDobbins](https://github.com/KenDobbins): Allow ctrl+enter to run command
