@@ -19,6 +19,8 @@ import { ElasticDecoration } from './ElasticDecoration'
 import { ElasticMatch } from './ElasticMatch'
 import { ElasticMatches } from './ElasticMatches'
 
+import * as stripJsonComments from 'strip-json-comments';
+
 // import { JSONCompletionItemProvider } from "./JSONCompletionItemProvider";
 
 // this method is called when your extension is activated
@@ -102,7 +104,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.languages.registerHoverProvider(languages, esCompletionHover));
 
     context.subscriptions.push(vscode.commands.registerCommand('elastic.execute', (em: ElasticMatch) => {
-        if (!em.Path) {
+        if (!em) {
             em = esMatches.Selection
         }
         executeQuery(context, resultsProvider, em)
@@ -202,7 +204,7 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
     request(<request.UrlOptions & request.CoreOptions>{
         url: requestUrl,
         method: em.Method.Text,
-        body: em.Body.Text,
+        body: stripJsonComments(em.Body.Text),
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
