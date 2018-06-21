@@ -102,7 +102,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.languages.registerHoverProvider(languages, esCompletionHover));
 
     context.subscriptions.push(vscode.commands.registerCommand('elastic.execute', (em: ElasticMatch) => {
-        if (!em.Path) {
+        if (!em || !em.Path) {
             em = esMatches.Selection
         }
         executeQuery(context, resultsProvider, em)
