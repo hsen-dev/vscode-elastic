@@ -74,11 +74,12 @@ export class ElasticMatch {
             }
         }
 
+        this.Body.Text = txt
+
         try {
             JSON.parse(stripJsonComments(jsonText))
             this.HasBody = true
             this.Range = new vscode.Range(this.Method.Range.start, this.Body.Range.end)
-            this.Body.Text = txt
         } catch (error) {
             // console.error(error.message)
             this.HasBody = false
