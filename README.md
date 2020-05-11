@@ -10,6 +10,28 @@ Welcome to Elasticsearch for VSCode! An extension for developing elasticsearch q
 - For https endpoints, just add protocol type in url : ```https://host```
 - For auth protected clusters, you can use ```http://user:pass@host:9200``` as the endpoint url to have it auth.
 
+### Submit requests
+Simple way:
+```text
+GET /my-index/_search
+{
+    "size":7,
+    "query": {
+        "match" : {
+            "message" : {
+                "query" : "this is a test"
+            }
+        }
+    }
+}
+```
+
+Get payload from file [[#4](https://github.com/hsen-dev/vscode-elastic/issues/4)]: 
+```text
+PUT /my-index
+!./opt/elasticsearch/mapping.json
+```
+
 
 ## Commands
 
