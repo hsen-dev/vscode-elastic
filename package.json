@@ -114,7 +114,7 @@
 		"jsesc": "^2.5.1",
 		"mocha": "^3.5.0",
 		"require-dir": "^0.3.2",
-		"typescript": "^2.5.2",
+		"typescript": "^4.1.3",
 		"vscode": "^1.1.5"
 	}
 }
