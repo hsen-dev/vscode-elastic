@@ -74,7 +74,7 @@ export class ElasticMatch {
             }
         }
 
-        this.Body.Text = txt
+        this.Body.Text = jsonText
 
         try {
             JSON.parse(stripJsonComments(jsonText))
