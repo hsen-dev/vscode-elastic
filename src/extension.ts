@@ -10,7 +10,7 @@ import { ElasticMatch } from './ElasticMatch';
 import { ElasticMatches } from './ElasticMatches';
 import { AxiosError, AxiosResponse } from 'axios';
 import axiosInstance from './axiosInstance';
-import * as stripJsonComments from 'strip-json-comments';
+import stripJsonComments from './helpers';
 
 export async function activate(context: vscode.ExtensionContext) {
     getHost(context);

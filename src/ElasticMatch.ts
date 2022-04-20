@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import * as stripJsonComments from 'strip-json-comments';
+import stripJsonComments from './helpers';
 
 export class ElasticItem {
     public Range!: vscode.Range;

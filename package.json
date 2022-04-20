@@ -2,7 +2,7 @@
     "name": "elasticsearch",
     "displayName": "Elasticsearch for VSCode",
     "description": "Elasticsearch client like Kibana console for vscode",
-    "version": "1.0.18",
+    "version": "1.0.19",
     "publisher": "Bar",
     "icon": "media/elastic.png",
     "main": "./out/extension.js",
@@ -123,8 +123,7 @@
         "mustache": "^4.2.0",
         "path": "^0.12.7",
         "routington": "^1.0.3",
-        "semver-closest": "^0.1.2",
-        "strip-json-comments": "^3.0.0"
+        "semver-closest": "^0.1.2"
     },
     "devDependencies": {
         "@types/mocha": "^9.1.0",
