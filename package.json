@@ -31,7 +31,10 @@
         "Kibana",
         "Elastic",
         "Elastic client",
-        "es"
+        "es",
+        "Bar",
+        "Bar Nuri",
+        "Nuri"
     ],
     "bugs": {
         "url": "https://github.com/barnuri/vscode-elastic/issues"
