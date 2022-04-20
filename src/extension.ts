@@ -202,7 +202,7 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
 
 
     request(<request.UrlOptions & request.CoreOptions>{
-        url: requestUrl,
+        url: em.Path.Text.startsWith('/') ? requestUrl : em.Path.Text,
         method: em.Method.Text,
         body: stripJsonComments(em.Body.Text),
         headers: {
