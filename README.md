@@ -28,7 +28,7 @@ GET /my-index/_search
 }
 ```
 
-Get payload from file [[#4](https://github.com/barnuri/vscode-elastic/issues/4)]:
+Get payload from file [[#4](https://github.com/hsen-dev/vscode-elastic/issues/4)]:
 
 ```text
 PUT /my-index

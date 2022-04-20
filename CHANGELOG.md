@@ -15,7 +15,7 @@
 
 ## [0.10]
 
--   adding requested feature: [keybindings](https://github.com/barnuri/vscode-elastic/issues/5)
+-   adding requested feature: [keybindings](https://github.com/hsen-dev/vscode-elastic/issues/5)
 -   fix some decorations issues
 
 ## [0.9]
@@ -30,12 +30,12 @@
 
 ## [0.7]
 
--   Get Payload from File ([requested feature](https://github.com/barnuri/vscode-elastic/issues/4))
+-   Get Payload from File ([requested feature](https://github.com/hsen-dev/vscode-elastic/issues/4))
 
 ## [0.6]
 
--   fixed issue [#1](https://github.com/barnuri/vscode-elastic/issues/1): elasticsearch logo style guides
--   adding [requested feature](https://github.com/barnuri/vscode-elastic/issues/3): `elasticsearch.showResultAsDocument`: Show result in a new json file, or show in default view.
+-   fixed issue [#1](https://github.com/hsen-dev/vscode-elastic/issues/1): elasticsearch logo style guides
+-   adding [requested feature](https://github.com/hsen-dev/vscode-elastic/issues/3): `elastic.showResultAsDocument`: Show result in a new json file, or show in default view.
 -   some bug fixes
 -   better syntax highlight
 

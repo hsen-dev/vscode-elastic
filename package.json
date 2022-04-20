@@ -1,5 +1,5 @@
 {
-    "name": "elasticsearch",
+    "name": "elastic",
     "displayName": "Elasticsearch for VSCode",
     "description": "Elasticsearch client like Kibana console for vscode",
     "version": "1.0.20",
@@ -34,26 +34,14 @@
         "Kibana",
         "Elastic",
         "Elastic client",
-        "es",
-        "Nuri",
-        "BarNuri",
-        "nuri",
-        "bar",
-        "barnuri"
-    ],
-    "tags": [
-        "Nuri",
-        "BarNuri",
-        "nuri",
-        "bar",
-        "barnuri"
+        "es"
     ],
     "bugs": {
-        "url": "https://github.com/barnuri/vscode-elastic/issues"
+        "url": "https://github.com/hsen-dev/vscode-elastic/issues"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/barnuri/vscode-elastic.git"
+        "url": "https://github.com/hsen-dev/vscode-elastic.git"
     },
     "activationEvents": [
         "onLanguage:es",
@@ -92,12 +80,12 @@
         "configuration": {
             "title": "Elasticsearch",
             "properties": {
-                "elasticsearch.showResultAsDocument": {
+                "elastic.showResultAsDocument": {
                     "type": "boolean",
                     "default": true,
                     "description": "Show result in a new json file, or show in default view"
                 },
-                "elasticsearch.host": {
+                "elastic.host": {
                     "type": "string",
                     "default": "http://localhost:9200",
                     "description": "Elasticsearch Host"
