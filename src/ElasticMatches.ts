@@ -1,53 +1,47 @@
 import * as vscode from 'vscode';
 import { ElasticMatch } from './ElasticMatch';
 
-
-
 export class ElasticMatches {
-    Editor: vscode.TextEditor
-    Matches: ElasticMatch[]
-    Selection: ElasticMatch
+    Editor!: vscode.TextEditor;
+    Matches: ElasticMatch[];
+    Selection!: ElasticMatch;
 
     public constructor(editor: vscode.TextEditor) {
-
         if (!editor) {
-            console.error("updateDecorations(): no active text editor.");
-            this.Matches = []
-            return
+            console.error('updateDecorations(): no active text editor.');
+            this.Matches = [];
+            return;
         }
-        this.Editor = editor
-        this.Matches = []
+        this.Editor = editor;
+        this.Matches = [];
 
-        var matched = false
+        var matched = false;
 
         for (var i = 0; i < editor.document.lineCount; i++) {
-            var line = editor.document.lineAt(i)
-            var trimedLine = line.text.trim()
-            if (trimedLine.length == 0)
-                continue
+            var line = editor.document.lineAt(i);
+            var trimedLine = line.text.trim();
+            if (trimedLine.length == 0) continue;
 
-            if (matched && trimedLine.startsWith('{'))
-                this.Matches[this.Matches.length - 1].HasBody = true
+            if (matched && trimedLine.startsWith('{')) this.Matches[this.Matches.length - 1].HasBody = true;
 
-            matched = false
+            matched = false;
             var match = ElasticMatch.RegexMatch.exec(line.text);
 
             if (match != null) {
-                matched = true
+                matched = true;
                 let em = new ElasticMatch(line, match);
-                this.Matches.push(em)
+                this.Matches.push(em);
             }
         }
 
-        this.UpdateSelection(editor)
+        this.UpdateSelection(editor);
     }
 
-    public UpdateSelection(editor) {
-        this.Editor = editor
+    public UpdateSelection(editor: vscode.TextEditor) {
+        this.Editor = editor;
         this.Matches.forEach(element => {
-            element.Selected = element.Range.contains(editor.selection)
-            if (element.Selected)
-                this.Selection = element
+            element.Selected = element.Range.contains(editor.selection);
+            if (element.Selected) this.Selection = element;
         });
     }
 }
