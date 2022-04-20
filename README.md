@@ -37,7 +37,7 @@ PUT /my-index
 
 ## Commands
 
--   **Elastic: Set Host** to create connection profile and connect.
+-   **Elasticsearch: Set Host** to create connection profile and connect.
 
 ## Keymaps
 

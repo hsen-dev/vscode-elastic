@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Language="en-US" Id="elastic" Version="0.4.7" Publisher="ria"/>
-    <DisplayName>Elastic</DisplayName>
+    <Identity Language="en-US" Id="elasticsearch" Version="0.4.7" Publisher="ria"/>
+    <DisplayName>Elasticsearch</DisplayName>
     <Description xml:space="preserve">Elasticsearch client like Kibana console for vscode</Description>
     <Tags>Elasticsearch,Kibana,Elastic,Elastic client,es,keybindings,ElasticSearch,__ext_es</Tags>
     <Categories>Other,Languages,Snippets</Categories>

@@ -18,7 +18,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.languages.registerCodeLensProvider(languages, new ElasticCodeLensProvider(context)));
 
     let resultsProvider = new ElasticContentProvider();
-    vscode.workspace.registerTextDocumentContentProvider('elastic', resultsProvider);
+    vscode.workspace.registerTextDocumentContentProvider('elasticsearch', resultsProvider);
 
     let esMatches: ElasticMatches;
     let decoration: ElasticDecoration;
@@ -58,7 +58,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.languages.registerHoverProvider(languages, esCompletionHover));
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('elastic.execute', (em: ElasticMatch) => {
+        vscode.commands.registerCommand('elasticsearch.execute', (em: ElasticMatch) => {
             if (!em) {
                 em = esMatches.Selection;
             }
@@ -67,7 +67,7 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('elastic.setHost', () => {
+        vscode.commands.registerCommand('elasticsearch.setHost', () => {
             setHost(context);
         }),
     );
@@ -80,7 +80,7 @@ export async function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('elastic.open', (em: ElasticMatch) => {
+        vscode.commands.registerCommand('elasticsearch.open', (em: ElasticMatch) => {
             var column = 0;
             let uri = vscode.Uri.file(em.File.Text);
             return vscode.workspace
@@ -96,7 +96,7 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('elastic.lint', (em: ElasticMatch) => {
+        vscode.commands.registerCommand('elasticsearch.lint', (em: ElasticMatch) => {
             try {
                 let l = em.Method.Range.start.line + 1;
                 const editor = vscode.window.activeTextEditor;
@@ -123,13 +123,13 @@ async function setHost(context: vscode.ExtensionContext): Promise<string> {
         value: getHost(context),
     });
 
-    context.workspaceState.update('elastic.host', host);
-    vscode.workspace.getConfiguration().update('elastic.host', host);
+    context.workspaceState.update('elasticsearch.host', host);
+    vscode.workspace.getConfiguration().update('elasticsearch.host', host);
     return host || 'localhost:9200';
 }
 
 export function getHost(context: vscode.ExtensionContext): string {
-    return context.workspaceState.get('elastic.host') || vscode.workspace.getConfiguration().get('elastic.host', 'localhost:9200');
+    return context.workspaceState.get('elasticsearch.host') || vscode.workspace.getConfiguration().get('elasticsearch.host', 'localhost:9200');
 }
 
 export async function executeQuery(context: vscode.ExtensionContext, resultsProvider: ElasticContentProvider, em: ElasticMatch) {
@@ -137,7 +137,7 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
     const startTime = new Date().getTime();
 
     const config = vscode.workspace.getConfiguration();
-    var asDocument = config.get('elastic.showResultAsDocument');
+    var asDocument = config.get('elasticsearch.showResultAsDocument');
     if (!asDocument) {
         vscode.commands.executeCommand('vscode.previewHtml', resultsProvider.contentUri, vscode.ViewColumn.Two, 'ElasticSearch Query');
         resultsProvider.update(context, host, '', startTime, 0, 'Executing query ...');

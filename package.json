@@ -2,7 +2,7 @@
     "name": "elasticsearch",
     "displayName": "Elasticsearch for VSCode",
     "description": "Elasticsearch client like Kibana console for vscode",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "publisher": "Bar",
     "icon": "media/elastic.png",
     "main": "./out/extension",
@@ -42,14 +42,14 @@
     },
     "activationEvents": [
         "onLanguage:es",
-        "onCommand:elastic.execute",
-        "onCommand:elastic.setHost"
+        "onCommand:elasticsearch.execute",
+        "onCommand:elasticsearch.setHost"
     ],
     "contributes": {
         "commands": [
             {
-                "command": "elastic.setHost",
-                "title": "Elastic: Set Host",
+                "command": "elasticsearch.setHost",
+                "title": "Elasticsearch: Set Host",
                 "category": "ES"
             }
         ],
@@ -77,26 +77,26 @@
         "configuration": {
             "title": "Elasticsearch",
             "properties": {
-                "elastic.showResultAsDocument": {
+                "elasticsearch.showResultAsDocument": {
                     "type": "boolean",
                     "default": true,
                     "description": "Show result in a new json file, or show in default view"
                 },
-                "elastic.host": {
+                "elasticsearch.host": {
                     "type": "string",
                     "default": "http://localhost:9200",
-                    "description": "Elasticsearch host"
+                    "description": "Elasticsearch Host"
                 }
             }
         },
         "keybindings": [
             {
                 "key": "ctrl+enter",
-                "command": "elastic.execute",
+                "command": "elasticsearch.execute",
                 "when": "editorTextFocus && resourceLangId == 'es'"
             },
             {
-                "command": "elastic.execute",
+                "command": "elasticsearch.execute",
                 "key": "alt+Enter",
                 "when": "editorTextFocus && resourceLangId==es"
             }

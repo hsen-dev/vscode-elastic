@@ -13,7 +13,7 @@ export class ElasticContentProvider implements vscode.TextDocumentContentProvide
 
     searchQuery!: string;
 
-    public contentUri = vscode.Uri.parse('elastic://results');
+    public contentUri = vscode.Uri.parse('elasticsearch://results');
     private changeEvent = new vscode.EventEmitter<vscode.Uri>();
 
     public provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): string | Thenable<string> {

@@ -35,7 +35,7 @@
 ## [0.6]
 
 -   fixed issue [#1](https://github.com/barnuri/vscode-elastic/issues/1): elasticsearch logo style guides
--   adding [requested feature](https://github.com/barnuri/vscode-elastic/issues/3): `elastic.showResultAsDocument`: Show result in a new json file, or show in default view.
+-   adding [requested feature](https://github.com/barnuri/vscode-elastic/issues/3): `elasticsearch.showResultAsDocument`: Show result in a new json file, or show in default view.
 -   some bug fixes
 -   better syntax highlight
 

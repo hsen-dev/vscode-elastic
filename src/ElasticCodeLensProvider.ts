@@ -21,7 +21,7 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
                 ret.push(
                     new vscode.CodeLens(em.Method.Range, {
                         title: '▶ Run Query',
-                        command: 'elastic.execute',
+                        command: 'elasticsearch.execute',
                         arguments: [em],
                     }),
                 );
@@ -29,14 +29,14 @@ export class ElasticCodeLensProvider implements vscode.CodeLensProvider {
                 if (em.HasBody) {
                     var command = {
                         title: '⚡Auto indent',
-                        command: 'elastic.lint',
+                        command: 'elasticsearch.lint',
                         arguments: [em] as any,
                     };
 
                     if (em.File && em.File.Text) {
                         command = {
                             title: '📂Open File',
-                            command: 'elastic.open',
+                            command: 'elasticsearch.open',
                             arguments: [em],
                         };
                     }
