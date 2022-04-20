@@ -4,14 +4,14 @@ const fs = require('fs');
 const jsesc = require('jsesc');
 (function () {
     'use strict';
-
-    const SRC_ROOT = `${__dirname}/../src/rest-spec`;
+    const restSpecPath = '../src/rest-spec';
+    const SRC_ROOT = `${__dirname}/${restSpecPath}`;
 
     del.sync(`${SRC_ROOT}/**/*.ts`);
     fs.writeFileSync(`${SRC_ROOT}/json.d.ts`, 'declare module "*.json" { const value: any; export default value; }');
 
     const requireDir = require('require-dir');
-    const restSpec = requireDir('../src/rest-spec', {recurse: true});
+    const restSpec = requireDir(restSpecPath, { recurse: true });
 
     let rootIndex = '';
 
@@ -22,21 +22,18 @@ const jsesc = require('jsesc');
         let versionIndex = endpointNames
             .map(endpointName => `const def_${endpointName.replace(/\./g, '_')} = JSON.parse('${jsesc(JSON.stringify(restSpec[version][endpointName]))}')`)
             .join(';\n');
-        
+
         versionIndex += `\n\nexport default {\n`;
         versionIndex += endpointNames
-            .map(endpointName => `  '${endpointName}': def_${endpointName.replace(/\./g, '_')}` +
-                (endpointName != '_common' ? `['${endpointName}']` : ''))
+            .map(endpointName => `  '${endpointName}': def_${endpointName.replace(/\./g, '_')}` + (endpointName != '_common' ? `['${endpointName}']` : ''))
             .join(',\n');
         versionIndex += '\n}';
         fs.writeFileSync(`${SRC_ROOT}/${version}/index.ts`, versionIndex, 'utf-8');
     });
 
     rootIndex += `\nexport default {\n`;
-    rootIndex += versions
-        .map(version => `  '${version.substring(1).replace(/_/g, '.')}': ${version}`)
-        .join(',\n');
+    rootIndex += versions.map(version => `  '${version.substring(1).replace(/_/g, '.')}': ${version}`).join(',\n');
     rootIndex += '\n}';
 
     fs.writeFileSync(`${SRC_ROOT}/index.ts`, rootIndex, 'utf-8');
-}());
+})();

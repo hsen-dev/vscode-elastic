@@ -14,7 +14,7 @@ import * as stripJsonComments from 'strip-json-comments';
 
 export async function activate(context: vscode.ExtensionContext) {
     getHost(context);
-    const languages = ['es'];
+    const languages = ['es', 'elasticsearch'];
     context.subscriptions.push(vscode.languages.registerCodeLensProvider(languages, new ElasticCodeLensProvider(context)));
 
     let resultsProvider = new ElasticContentProvider();
@@ -58,7 +58,7 @@ export async function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.languages.registerHoverProvider(languages, esCompletionHover));
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('elasticsearch.execute', (em: ElasticMatch) => {
+        vscode.commands.registerCommand('extension.execute', (em: ElasticMatch) => {
             if (!em) {
                 em = esMatches.Selection;
             }
@@ -67,7 +67,7 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('elasticsearch.setHost', () => {
+        vscode.commands.registerCommand('extension.setHost', () => {
             setHost(context);
         }),
     );
@@ -80,7 +80,7 @@ export async function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('elasticsearch.open', (em: ElasticMatch) => {
+        vscode.commands.registerCommand('extension.open', (em: ElasticMatch) => {
             var column = 0;
             let uri = vscode.Uri.file(em.File.Text);
             return vscode.workspace
@@ -96,7 +96,7 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('elasticsearch.lint', (em: ElasticMatch) => {
+        vscode.commands.registerCommand('extension.lint', (em: ElasticMatch) => {
             try {
                 let l = em.Method.Range.start.line + 1;
                 const editor = vscode.window.activeTextEditor;
