@@ -73,10 +73,10 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
     vscode.commands.registerCommand('extension.setClip', (uri, query) => {
-        var ncp = require('copy-paste');
-        ncp.copy(query, function () {
-            vscode.window.showInformationMessage('Copied to clipboard');
-        });
+        // var ncp = require('copy-paste');
+        // ncp.copy(query, function () {
+        // vscode.window.showInformationMessage('Copied to clipboard');
+        // });
     });
 
     context.subscriptions.push(
