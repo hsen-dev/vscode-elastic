@@ -15,7 +15,7 @@
         "deploy": "vsce publish --yarn"
     },
     "engines": {
-        "vscode": "^1.33.0"
+        "vscode": "^1.66.0"
     },
     "galleryBanner": {
         "color": "#005571",
