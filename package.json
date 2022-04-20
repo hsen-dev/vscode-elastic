@@ -2,7 +2,7 @@
     "name": "elasticsearch",
     "displayName": "Elasticsearch for VSCode",
     "description": "Elasticsearch client like Kibana console for vscode",
-    "version": "1.0.15",
+    "version": "1.0.17",
     "publisher": "Bar",
     "icon": "media/elastic.png",
     "main": "./out/extension.js",

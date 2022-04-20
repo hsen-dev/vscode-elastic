@@ -2,4 +2,4 @@
 . "$(dirname "$0")/_/husky.sh"
 
 npm version patch --commit-hooks false --git-tag-version false --force
-git push
+git add .
