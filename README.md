@@ -1,7 +1,7 @@
 ## Elasticsearch for VSCode
 
-[![.github/workflows/publish.yaml](/actions/workflows/publish.yaml/badge.svg)](/actions/workflows/publish.yaml)
-[![.github/workflows/runTests.yaml](/actions/workflows/runTests.yaml/badge.svg)](/actions/workflows/runTests.yaml)
+[![.github/workflows/publish.yaml](../actions/workflows/publish.yaml/badge.svg)](../actions/workflows/publish.yaml)
+[![.github/workflows/runTests.yaml](../actions/workflows/runTests.yaml/badge.svg)](../actions/workflows/runTests.yaml)
 
 Welcome to Elasticsearch for VSCode! An extension for developing elasticsearch queries like Kibana console and Sense extention.
 
