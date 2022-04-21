@@ -2,13 +2,14 @@
     "name": "elastic",
     "displayName": "Elasticsearch for VSCode",
     "description": "Elasticsearch client like Kibana console for vscode",
-    "version": "1.0.20",
-    "publisher": "Bar",
+    "version": "1.0.21",
+    "publisher": "ria",
     "icon": "media/elastic.png",
     "main": "./out/extension.js",
     "scripts": {
         "vscode:prepublish": "npm run package",
         "package": "webpack --mode production --devtool hidden-source-map",
+        "test": "npm run package",
         "compile": "webpack",
         "watch": "webpack --watch",
         "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
@@ -35,6 +36,11 @@
         "Elastic",
         "Elastic client",
         "es"
+    ],
+    "tags": [
+        "Elasticsearch",
+        "Elastic",
+        "Kibana"
     ],
     "bugs": {
         "url": "https://github.com/hsen-dev/vscode-elastic/issues"
