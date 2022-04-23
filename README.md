@@ -1,6 +1,6 @@
 ## Elasticsearch for VSCode
 
-Welcome to Elasticsearch for VSCode! An extension for developing elasticsearch queries like Kibana console and Sense extention.
+Welcome to Elasticsearch for VSCode! An extension for developing elasticsearch queries.
 
 ![shot](shots/all.gif)
 
