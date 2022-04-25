@@ -21,3 +21,5 @@ jobs:
         run: npm run deploy
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          REPO_URL: "${{ github.server_url }}/${{ github.repository }}"
+          BRANCH: "${GITHUB_REF##*/}"
