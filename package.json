@@ -14,7 +14,7 @@
         "watch": "webpack --watch",
         "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
         "removeUnusedImports": "tslint --config tslint-imports.json --fix --project .",
-        "deploy": "vsce publish --yarn",
+        "deploy": "cross-env-shell \"vsce publish --yarn --githubBranch $BRANCH --baseContentUrl $REPO_URL --baseImagesUrl $REPO_URL --pat $VSCE_PAT\"",
         "postinstall": "husky install",
         "updateDep": "npm-check-updates -u"
     },
@@ -112,6 +112,7 @@
         ]
     },
     "dependencies": {
+        "cross-env": "^7.0.3",
         "axios": "^0.26.1",
         "copy-paste": "^1.3.0",
         "json-markup": "^1.1.3",
