@@ -9,7 +9,6 @@ import { ElasticDecoration } from './ElasticDecoration';
 import { ElasticMatch } from './ElasticMatch';
 import { ElasticMatches } from './ElasticMatches';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import axiosInstance from './axiosInstance';
 import stripJsonComments from './helpers';
 import { JsonPanel } from './jsonPanel';
 const jsonPanel = new JsonPanel();
@@ -153,7 +152,7 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
             url,
             method: em.Method.Text as any,
             data: body,
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': em.IsBulk ? 'application/x-ndjson' : 'application/json' },
         }).catch(error => error as AxiosError<any, any>);
     } catch (error) {
         response = error;
@@ -165,6 +164,7 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
     const data = response as AxiosResponse<any>;
 
     let results = data.data;
+    if (!results) results = data;
     if (asDocument) {
         try {
             const config = vscode.workspace.getConfiguration('editor');
@@ -175,7 +175,7 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
         }
         showResult(results, vscode.window.activeTextEditor!.viewColumn! + 1);
     } else {
-        jsonPanel.render(results, `ElasticSearch Results[${endTime - startTime}]`);
+        jsonPanel.render(results, `ElasticSearch Results[${endTime - startTime}ms]`);
     }
 }
 
