@@ -36,7 +36,7 @@ export async function activate(context: vscode.ExtensionContext) {
         return false;
     }
 
-    if (checkEditor(vscode.window.activeTextEditor!.document)) {
+    if (vscode.window.activeTextEditor && checkEditor(vscode.window.activeTextEditor!.document)) {
         esMatches = new ElasticMatches(vscode.window.activeTextEditor!);
         decoration!.UpdateDecoration(esMatches);
     }
