@@ -8,7 +8,7 @@ import { ElasticContentProvider } from './ElasticContentProvider';
 import { ElasticDecoration } from './ElasticDecoration';
 import { ElasticMatch } from './ElasticMatch';
 import { ElasticMatches } from './ElasticMatches';
-import { AxiosError, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import axiosInstance from './axiosInstance';
 import stripJsonComments from './helpers';
 import { JsonPanel } from './jsonPanel';
@@ -148,14 +148,13 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
     let response: any;
     try {
         const body = stripJsonComments(em.Body.Text);
-        response = await axiosInstance
-            .request({
-                method: em.Method.Text as any,
-                baseURL: host,
-                url: em.Path.Text.startsWith('/') ? `${host}${em.Path.Text}` : em.Path.Text,
-                data: !body ? undefined : body,
-            })
-            .catch(error => error as AxiosError<any, any>);
+        let url = 'http://' + host + (em.Path.Text.startsWith('/') ? '' : '/') + em.Path.Text;
+        response = await axios({
+            url,
+            method: em.Method.Text as any,
+            data: body,
+            headers: { 'Content-Type': 'application/json' },
+        }).catch(error => error as AxiosError<any, any>);
     } catch (error) {
         response = error;
     }
