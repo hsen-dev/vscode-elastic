@@ -11,6 +11,8 @@ import { ElasticMatches } from './ElasticMatches';
 import { AxiosError, AxiosResponse } from 'axios';
 import axiosInstance from './axiosInstance';
 import stripJsonComments from './helpers';
+import { JsonPanel } from './jsonPanel';
+const jsonPanel = new JsonPanel();
 
 export async function activate(context: vscode.ExtensionContext) {
     getHost(context);
@@ -138,10 +140,6 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
 
     const config = vscode.workspace.getConfiguration();
     var asDocument = config.get('elasticsearch.showResultAsDocument');
-    if (!asDocument) {
-        vscode.commands.executeCommand('vscode.previewHtml', resultsProvider.contentUri, vscode.ViewColumn.Two, 'ElasticSearch Query');
-        resultsProvider.update(context, host, '', startTime, 0, 'Executing query ...');
-    }
 
     const sbi = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
     sbi.text = '$(search) Executing query ...';
@@ -178,8 +176,7 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
         }
         showResult(results, vscode.window.activeTextEditor!.viewColumn! + 1);
     } else {
-        resultsProvider.update(context, host, results, endTime - startTime, data.status, data.statusText);
-        vscode.commands.executeCommand('vscode.previewHtml', resultsProvider.contentUri, vscode.ViewColumn.Two, 'ElasticSearch Results');
+        jsonPanel.render(results, `ElasticSearch Results[${endTime - startTime}]`);
     }
 }
 
