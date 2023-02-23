@@ -8,9 +8,10 @@ import { ElasticContentProvider } from './ElasticContentProvider';
 import { ElasticDecoration } from './ElasticDecoration';
 import { ElasticMatch } from './ElasticMatch';
 import { ElasticMatches } from './ElasticMatches';
-import { AxiosError, AxiosResponse } from 'axios';
-import axiosInstance from './axiosInstance';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import stripJsonComments from './helpers';
+import { JsonPanel } from './jsonPanel';
+const jsonPanel = new JsonPanel();
 
 export async function activate(context: vscode.ExtensionContext) {
     getHost(context);
@@ -34,7 +35,7 @@ export async function activate(context: vscode.ExtensionContext) {
         return false;
     }
 
-    if (checkEditor(vscode.window.activeTextEditor!.document)) {
+    if (vscode.window.activeTextEditor && checkEditor(vscode.window.activeTextEditor!.document)) {
         esMatches = new ElasticMatches(vscode.window.activeTextEditor!);
         decoration!.UpdateDecoration(esMatches);
     }
@@ -138,10 +139,6 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
 
     const config = vscode.workspace.getConfiguration();
     var asDocument = config.get('elasticsearch.showResultAsDocument');
-    if (!asDocument) {
-        vscode.commands.executeCommand('vscode.previewHtml', resultsProvider.contentUri, vscode.ViewColumn.Two, 'ElasticSearch Query');
-        resultsProvider.update(context, host, '', startTime, 0, 'Executing query ...');
-    }
 
     const sbi = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
     sbi.text = '$(search) Executing query ...';
@@ -150,14 +147,13 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
     let response: any;
     try {
         const body = stripJsonComments(em.Body.Text);
-        response = await axiosInstance
-            .request({
-                method: em.Method.Text as any,
-                baseURL: host,
-                url: em.Path.Text.startsWith('/') ? `${host}${em.Path.Text}` : em.Path.Text,
-                data: !body ? undefined : body,
-            })
-            .catch(error => error as AxiosError<any, any>);
+        let url = 'http://' + host + (em.Path.Text.startsWith('/') ? '' : '/') + em.Path.Text;
+        response = await axios({
+            url,
+            method: em.Method.Text as any,
+            data: body,
+            headers: { 'Content-Type': em.IsBulk ? 'application/x-ndjson' : 'application/json' },
+        }).catch(error => error as AxiosError<any, any>);
     } catch (error) {
         response = error;
     }
@@ -168,6 +164,7 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
     const data = response as AxiosResponse<any>;
 
     let results = data.data;
+    if (!results) results = data;
     if (asDocument) {
         try {
             const config = vscode.workspace.getConfiguration('editor');
@@ -178,8 +175,7 @@ export async function executeQuery(context: vscode.ExtensionContext, resultsProv
         }
         showResult(results, vscode.window.activeTextEditor!.viewColumn! + 1);
     } else {
-        resultsProvider.update(context, host, results, endTime - startTime, data.status, data.statusText);
-        vscode.commands.executeCommand('vscode.previewHtml', resultsProvider.contentUri, vscode.ViewColumn.Two, 'ElasticSearch Results');
+        jsonPanel.render(results, `ElasticSearch Results[${endTime - startTime}ms]`);
     }
 }
 

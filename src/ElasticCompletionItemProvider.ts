@@ -76,7 +76,8 @@ export class ElasticCompletionItemProvider implements vscode.CompletionItemProvi
             var path = match[2].split('?')[0];
             path.split('/').pop();
             const m = restSpec.match(`${match[1]}${path}`);
-            params.push(`${m.node.spec.body.description}`);
+            if (!m) return;
+            if (m.node.spec.body) params.push(`${m.node.spec.body.description}`);
 
             if (m.node.spec.url.params) {
                 params.push(os.EOL + 'url params:');

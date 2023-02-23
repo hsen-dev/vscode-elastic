@@ -18,8 +18,9 @@ export class ElasticMatch {
     Range: vscode.Range;
     HasBody: boolean = false;
     Selected: boolean = false;
+    IsBulk: boolean = false;
 
-    public constructor(headLine: vscode.TextLine, match: any) {
+    public constructor(headLine: vscode.TextLine, match: RegExpExecArray) {
         let lrange = new vscode.Range(headLine.lineNumber, match[1].length + 1, headLine.lineNumber, headLine.text.length);
         let mrange = new vscode.Range(headLine.lineNumber, 0, headLine.lineNumber, match[1].length);
 
@@ -35,6 +36,9 @@ export class ElasticMatch {
         let line = this.Method.Range.start.line + 1;
         let ln = line;
 
+        let url = match[2].split('?')[0];
+        this.IsBulk = url === '_bulk' || url.endsWith('/_bulk');
+
         while (editor.document.lineCount > ln) {
             var t = editor.document.lineAt(ln).text;
 
@@ -44,9 +48,6 @@ export class ElasticMatch {
             txt += t + '\n';
             lm = editor.document.lineAt(ln).text.length;
             ln++;
-            var o = txt.split('{').length;
-            var c = txt.split('}').length;
-            if (o == c) break;
         }
 
         txt = txt.substring(0, txt.length - 1);
@@ -74,7 +75,7 @@ export class ElasticMatch {
         this.Body.Text = jsonText;
 
         try {
-            JSON.parse(stripJsonComments(jsonText));
+            if (!this.IsBulk) JSON.parse(stripJsonComments(jsonText));
             this.HasBody = true;
             this.Range = new vscode.Range(this.Method.Range.start, this.Body.Range.end);
         } catch (error: any) {
